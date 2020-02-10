@@ -46,7 +46,13 @@ class _BottomNavigationScaffoldState extends State<BottomNavigationScaffold> {
             index: _currentlySelectedIndex,
             children: widget.navigationBarItems
                 .map(
-                  (item) => item.initialPageBuilder(),
+                  (item) => Navigator(
+                    key: item.navigatorKey,
+                    onGenerateRoute: (settings) => MaterialPageRoute(
+                      settings: settings,
+                      builder: (context) => item.initialPageBuilder(),
+                    ),
+                  ),
                 )
                 .toList(),
           ),
