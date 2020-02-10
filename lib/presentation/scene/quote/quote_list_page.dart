@@ -1,6 +1,7 @@
 import 'package:breaking_bapp/data_source.dart';
 import 'package:breaking_bapp/model/quote.dart';
 import 'package:breaking_bapp/presentation/common/response_view.dart';
+import 'package:breaking_bapp/presentation/scene/quote/quote_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -50,9 +51,16 @@ class _QuoteListPageState extends State<QuoteListPage> {
           isLoading: _isLoading,
           hasError: _hasError,
           onTryAgainTap: _fetchQuoteList,
-          contentWidgetBuilder: (context) => ListView.builder(
+          contentWidgetBuilder: (context) => ListView.separated(
             itemCount: _quoteList.length,
-            itemBuilder: (context, index) => Text(_quoteList[index].text),
+            itemBuilder: (context, index) {
+              final quote = _quoteList[index];
+              return QuoteListItem(
+                quote: quote,
+                onAuthorNameTap: () {},
+              );
+            },
+            separatorBuilder: (context, index) => Divider(),
           ),
         ),
       );

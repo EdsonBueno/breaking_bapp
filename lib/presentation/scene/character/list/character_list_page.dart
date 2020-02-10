@@ -54,17 +54,21 @@ class _CharacterListPageState extends State<CharacterListPage> {
           onTryAgainTap: _fetchCharacterSummaryList,
           contentWidgetBuilder: (context) => ListView.builder(
             itemCount: _characterSummaryList.length,
-            itemBuilder: (context, index) => CharacterListItem(
-              character: _characterSummaryList[index],
-              onTap: (id) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CharacterDetailPage(id: id),
-                  ),
-                );
-              },
-            ),
+            itemBuilder: (context, index) {
+              final character = _characterSummaryList[index];
+              return CharacterListItem(
+                character: character,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CharacterDetailPage(id: character.id),
+                    ),
+                  );
+                },
+              );
+            },
           ),
         ),
       );
