@@ -11,25 +11,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final List<BottomNavigationTab> _bottomNavigationTabs = [
+    BottomNavigationTab(
+      bottomNavigationBarItem: BottomNavigationBarItem(
+        title: const Text('Characters'),
+        icon: Icon(Icons.people),
+      ),
+      navigatorKey: GlobalKey<NavigatorState>(),
+      initialPageBuilder: (_) => CharacterListPage(),
+    ),
+    BottomNavigationTab(
+      bottomNavigationBarItem: BottomNavigationBarItem(
+        title: const Text('Quotes'),
+        icon: Icon(Icons.format_quote),
+      ),
+      navigatorKey: GlobalKey<NavigatorState>(),
+      initialPageBuilder: (_) => QuoteListPage(),
+    )
+  ];
+
   @override
   Widget build(BuildContext context) => BottomNavigationScaffold(
-        navigationBarItems: [
-          BottomNavigationTab(
-            bottomNavigationBarItem: BottomNavigationBarItem(
-              title: const Text('Characters'),
-              icon: Icon(Icons.people),
-            ),
-            navigatorKey: GlobalKey<NavigatorState>(),
-            initialPageBuilder: (_) => CharacterListPage(),
-          ),
-          BottomNavigationTab(
-            bottomNavigationBarItem: BottomNavigationBarItem(
-              title: const Text('Quotes'),
-              icon: Icon(Icons.format_quote),
-            ),
-            navigatorKey: GlobalKey<NavigatorState>(),
-            initialPageBuilder: (_) => QuoteListPage(),
-          )
-        ],
+        navigationBarItems: _bottomNavigationTabs,
       );
 }
