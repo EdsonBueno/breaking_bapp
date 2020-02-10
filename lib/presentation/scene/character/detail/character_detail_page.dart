@@ -26,6 +26,14 @@ class CharacterDetailPage extends StatefulWidget {
 // basic as possible and avoid taking the focus off the routing/navigation,
 // which is the purpose of this sample.
 class _CharacterDetailPageState extends State<CharacterDetailPage> {
+  /// An object that identifies the currently active Future call. Used to avoid
+  /// calling setState under two conditions:
+  /// 1 - If this state is already disposed, e.g. if the user left this page
+  /// before the Future completion.
+  /// 2 - From duplicated Future calls, if somehow we call _fetchCharacter
+  /// two times in a row.
+  Object _activeCallbackIdentity;
+
   bool _isLoading = true;
   bool _hasError = false;
   CharacterDetail _character;
@@ -100,24 +108,37 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
         ),
       );
 
+  @override
+  void dispose() {
+    _activeCallbackIdentity = null;
+    super.dispose();
+  }
+
   Future<void> _fetchCharacter() async {
     setState(() {
       _isLoading = true;
     });
 
+    final callbackIdentity = Object();
+    _activeCallbackIdentity = callbackIdentity;
+
     try {
       final fetchedCharacter =
           await DataSource.getCharacterDetail(id: widget.id, name: widget.name);
-      setState(() {
-        _character = fetchedCharacter;
-        _isLoading = false;
-        _hasError = false;
-      });
+      if (callbackIdentity == _activeCallbackIdentity) {
+        setState(() {
+          _character = fetchedCharacter;
+          _isLoading = false;
+          _hasError = false;
+        });
+      }
     } on Exception {
-      setState(() {
-        _hasError = true;
-        _isLoading = false;
-      });
+      if (callbackIdentity == _activeCallbackIdentity) {
+        setState(() {
+          _hasError = true;
+          _isLoading = false;
+        });
+      }
     }
   }
 }

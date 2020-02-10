@@ -13,29 +13,17 @@ class QuoteListPage extends StatefulWidget {
 }
 
 class _QuoteListPageState extends State<QuoteListPage> {
+  /// An object that identifies the currently active Future call. Used to avoid
+  /// calling setState under two conditions:
+  /// 1 - If this state is already disposed, e.g. if the user left this page
+  /// before the Future completion.
+  /// 2 - From duplicated Future calls, if somehow we call
+  /// _fetchQuoteList two times in a row.
+  Object _activeCallbackIdentity;
+
   List<Quote> _quoteList;
   bool _isLoading = true;
   bool _hasError = false;
-
-  Future<void> _fetchQuoteList() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final fetchedQuoteList = await DataSource.getQuoteList();
-      setState(() {
-        _quoteList = fetchedQuoteList;
-        _isLoading = false;
-        _hasError = false;
-      });
-    } on Exception {
-      setState(() {
-        _hasError = true;
-        _isLoading = false;
-      });
-    }
-  }
 
   @override
   void initState() {
@@ -77,4 +65,37 @@ class _QuoteListPageState extends State<QuoteListPage> {
           ),
         ),
       );
+
+  @override
+  void dispose() {
+    _activeCallbackIdentity = null;
+    super.dispose();
+  }
+
+  Future<void> _fetchQuoteList() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final callbackIdentity = Object();
+    _activeCallbackIdentity = callbackIdentity;
+
+    try {
+      final fetchedQuoteList = await DataSource.getQuoteList();
+      if (callbackIdentity == _activeCallbackIdentity) {
+        setState(() {
+          _quoteList = fetchedQuoteList;
+          _isLoading = false;
+          _hasError = false;
+        });
+      }
+    } on Exception {
+      if (callbackIdentity == _activeCallbackIdentity) {
+        setState(() {
+          _hasError = true;
+          _isLoading = false;
+        });
+      }
+    }
+  }
 }
