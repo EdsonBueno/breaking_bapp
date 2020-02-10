@@ -41,7 +41,7 @@ class CharacterDetail {
   final List<String> occupations;
   final String pictureUrl;
   final String vitalStatus;
-  final List<String> seasons;
+  final List<int> seasons;
   final String nickname;
   final String actorName;
 }
