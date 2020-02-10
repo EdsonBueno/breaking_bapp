@@ -21,16 +21,22 @@ class DataSource {
         ),
       );
 
-  static Future<CharacterDetail> getCharacterDetail(int id) async => http
-      .get(
-        _ApiUrlBuilder.characterById(id),
-      )
-      .mapFromResponse(
-        (jsonArray) => _parseSingleItemFromJsonArray(
-          jsonArray,
-          (jsonObject) => CharacterDetail.fromJson(jsonObject),
-        ),
-      );
+  static Future<CharacterDetail> getCharacterDetail(
+      {String name, int id}) async {
+    assert(name != null || id != null);
+    return http
+        .get(
+          id != null
+              ? _ApiUrlBuilder.characterById(id)
+              : _ApiUrlBuilder.characterByName(name),
+        )
+        .mapFromResponse(
+          (jsonArray) => _parseSingleItemFromJsonArray(
+            jsonArray,
+            (jsonObject) => CharacterDetail.fromJson(jsonObject),
+          ),
+        );
+  }
 
   static Future<List<Quote>> getQuoteList() async => http
       .get(
@@ -69,6 +75,11 @@ class _ApiUrlBuilder {
       'category=Breaking+Bad';
 
   static String characterById(int id) => '$_baseUrl$_charactersResource$id';
+
+  static String characterByName(String name) => '$_baseUrl$_charactersResource?'
+      // The API expects us to encode our query string arguments with '+' instead of
+      //  spacing.
+      'name=${name.replaceAll(' ', '+')}';
 
   static String quoteList() => '$_baseUrl$_quotesResource?'
       'series=Breaking+Bad';
