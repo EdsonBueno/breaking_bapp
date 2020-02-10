@@ -57,13 +57,14 @@ class _BottomNavigationScaffoldState extends State<BottomNavigationScaffold> {
                 .toList(),
           ),
           bottomNavigationBar: BottomNavigationBar(
-              currentIndex: _currentlySelectedIndex,
-              items: widget.navigationBarItems
-                  .map(
-                    (item) => item.bottomNavigationBarItem,
-                  )
-                  .toList(),
-              onTap: onTabSelected),
+            currentIndex: _currentlySelectedIndex,
+            items: widget.navigationBarItems
+                .map(
+                  (item) => item.bottomNavigationBarItem,
+                )
+                .toList(),
+            onTap: onTabSelected,
+          ),
         ),
       );
 
@@ -72,14 +73,17 @@ class _BottomNavigationScaffoldState extends State<BottomNavigationScaffold> {
     if (_currentlySelectedIndex == newIndex) {
       // If the user is re-selecting the tab, the common
       // behavior is to empty the stack.
-      widget.navigationBarItems[newIndex].navigatorKey.currentState
-          .popUntil((route) => route.isFirst);
+      widget.navigationBarItems[newIndex].navigatorKey.currentState.popUntil(
+        (route) => route.isFirst,
+      );
     } else {
       setState(() {
         _currentlySelectedIndex = newIndex;
       });
     }
 
-    widget.onItemSelected(newIndex);
+    if (widget.onItemSelected != null) {
+      widget.onItemSelected(newIndex);
+    }
   }
 }
