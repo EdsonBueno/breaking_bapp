@@ -22,9 +22,6 @@ class CharacterDetailPage extends StatefulWidget {
   _CharacterDetailPageState createState() => _CharacterDetailPageState();
 }
 
-// We're using `setState` as the state management approach to keep it as
-// basic as possible and avoid taking the focus off the routing/navigation,
-// which is the purpose of this sample.
 class _CharacterDetailPageState extends State<CharacterDetailPage> {
   bool _isLoading = true;
   bool _hasError = false;
