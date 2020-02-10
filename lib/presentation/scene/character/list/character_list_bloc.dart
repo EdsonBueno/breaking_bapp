@@ -6,7 +6,7 @@ import 'package:rxdart/rxdart.dart';
 
 class CharacterListBloc {
   CharacterListBloc() {
-    subscriptions
+    _subscriptions
       ..add(
         _fetchCharacterSummaryList().listen(_onNewStateSubject.add),
       )
@@ -17,7 +17,7 @@ class CharacterListBloc {
       );
   }
 
-  CompositeSubscription subscriptions;
+  CompositeSubscription _subscriptions;
   final _onTryAgainSubject = StreamController<void>();
   Sink<void> get onTryAgain => _onTryAgainSubject.sink;
 
@@ -41,6 +41,6 @@ class CharacterListBloc {
   void dispose() {
     _onTryAgainSubject.close();
     _onNewStateSubject.close();
-    subscriptions.dispose();
+    _subscriptions.dispose();
   }
 }

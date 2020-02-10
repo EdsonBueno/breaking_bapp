@@ -1,5 +1,6 @@
 import 'package:breaking_bapp/presentation/common/bottom_navigation/bottom_navigation_scaffold.dart';
 import 'package:breaking_bapp/presentation/common/bottom_navigation/bottom_navigation_tab.dart';
+import 'package:breaking_bapp/presentation/scene/character/list/character_list_bloc.dart';
 import 'package:breaking_bapp/presentation/scene/character/list/character_list_page.dart';
 import 'package:breaking_bapp/presentation/scene/quote/quote_list_page.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icon(Icons.people),
       ),
       navigatorKey: GlobalKey<NavigatorState>(),
-      initialPageBuilder: (_) => CharacterListPage(),
+      initialPageBuilder: (_) => CharacterListPage(bloc: CharacterListBloc()),
     ),
     BottomNavigationTab(
       bottomNavigationBarItem: BottomNavigationBarItem(
