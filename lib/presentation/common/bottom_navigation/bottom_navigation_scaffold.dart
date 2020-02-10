@@ -50,7 +50,7 @@ class _BottomNavigationScaffoldState extends State<BottomNavigationScaffold> {
                     key: item.navigatorKey,
                     onGenerateRoute: (settings) => MaterialPageRoute(
                       settings: settings,
-                      builder: (context) => item.initialPageBuilder(),
+                      builder: (context) => item.initialPageBuilder(context),
                     ),
                   ),
                 )

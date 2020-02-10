@@ -14,5 +14,5 @@ class BottomNavigationTab {
 
   final BottomNavigationBarItem bottomNavigationBarItem;
   final GlobalKey<NavigatorState> navigatorKey;
-  final Widget Function() initialPageBuilder;
+  final Widget Function(BuildContext context) initialPageBuilder;
 }
