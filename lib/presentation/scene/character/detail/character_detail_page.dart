@@ -9,12 +9,14 @@ import 'package:flutter/widgets.dart';
 /// received id.
 class CharacterDetailPage extends StatefulWidget {
   const CharacterDetailPage({
-    @required this.id,
+    this.id,
+    this.name,
     Key key,
-  })  : assert(id != null),
+  })  : assert(id != null || name != null),
         super(key: key);
 
   final int id;
+  final String name;
 
   @override
   _CharacterDetailPageState createState() => _CharacterDetailPageState();
@@ -104,7 +106,8 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
     });
 
     try {
-      final fetchedCharacter = await DataSource.getCharacterDetail(widget.id);
+      final fetchedCharacter =
+          await DataSource.getCharacterDetail(id: widget.id, name: widget.name);
       setState(() {
         _character = fetchedCharacter;
         _isLoading = false;

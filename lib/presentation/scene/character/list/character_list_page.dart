@@ -62,8 +62,9 @@ class _CharacterListPageState extends State<CharacterListPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          CharacterDetailPage(id: character.id),
+                      builder: (context) => CharacterDetailPage(
+                        id: character.id,
+                      ),
                     ),
                   );
                 },
