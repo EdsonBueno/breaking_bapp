@@ -1,7 +1,8 @@
 import 'package:breaking_bapp/data_source.dart';
 import 'package:breaking_bapp/model/character_summary.dart';
 import 'package:breaking_bapp/presentation/common/response_view.dart';
-import 'package:breaking_bapp/presentation/scene/list/character_list_item.dart';
+import 'package:breaking_bapp/presentation/scene/character/detail/character_detail_page.dart';
+import 'package:breaking_bapp/presentation/scene/character/list/character_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -56,14 +57,12 @@ class _CharacterListPageState extends State<CharacterListPage> {
             itemBuilder: (context, index) => CharacterListItem(
               character: _characterSummaryList[index],
               onTap: (id) {
-                /*
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CharacterDetailPage(id: id),
-              ),
-            );
-            */
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CharacterDetailPage(id: id),
+                  ),
+                );
               },
             ),
           ),
