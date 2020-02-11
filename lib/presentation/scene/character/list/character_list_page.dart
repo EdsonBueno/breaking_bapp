@@ -7,14 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 /// Fetches and displays a list of characters' summarized info.
-class CharacterListPage extends StatelessWidget {
-  const CharacterListPage({
-    @required this.bloc,
-    Key key,
-  })  : assert(bloc != null),
-        super(key: key);
+class CharacterListPage extends StatefulWidget {
+  @override
+  _CharacterListPageState createState() => _CharacterListPageState();
+}
 
-  final CharacterListBloc bloc;
+class _CharacterListPageState extends State<CharacterListPage> {
+  final _bloc = CharacterListBloc();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -22,13 +21,13 @@ class CharacterListPage extends StatelessWidget {
           title: const Text('Characters'),
         ),
         body: StreamBuilder<CharacterListState>(
-          stream: bloc.onNewState,
+          stream: _bloc.onNewState,
           builder: (context, snapshot) {
             final state = snapshot.data;
             return ResponseView(
               isLoading: state is Loading,
               hasError: state is Error,
-              onTryAgainTap: () => bloc.onTryAgain.add(null),
+              onTryAgainTap: () => _bloc.onTryAgain.add(null),
               contentWidgetBuilder: (context) {
                 if (state is Success) {
                   final characterSummaryList = state.list;
@@ -59,4 +58,10 @@ class CharacterListPage extends StatelessWidget {
           },
         ),
       );
+
+  @override
+  void dispose() {
+    _bloc.dispose();
+    super.dispose();
+  }
 }

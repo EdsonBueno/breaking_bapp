@@ -17,7 +17,7 @@ class CharacterListBloc {
       );
   }
 
-  CompositeSubscription _subscriptions;
+  final _subscriptions = CompositeSubscription();
   final _onTryAgainSubject = StreamController<void>();
   Sink<void> get onTryAgain => _onTryAgainSubject.sink;
 
