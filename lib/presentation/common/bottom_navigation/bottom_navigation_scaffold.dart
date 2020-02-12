@@ -2,7 +2,7 @@ import 'package:breaking_bapp/presentation/common/bottom_navigation/bottom_navig
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-/// A Scaffold with a configured BottomNavigationBar, separate
+/// A Scaffold with a configured BottomNavigationBar, separat
 /// Navigators for each tab view and state retaining across tab switches.
 /// Detailed tutorial: https://edsonbueno.com/2020/01/23/bottom-navigation-in-flutter-mastery-guide/
 class BottomNavigationScaffold extends StatefulWidget {
@@ -86,24 +86,40 @@ class _BottomNavigationScaffoldState extends State<BottomNavigationScaffold>
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        // The Stack is what allows us to retain state across tab
-        // switches by keeping all of our views in the widget tree.
-        body: Stack(
-          fit: StackFit.expand,
-          children: materialNavigationBarItems
-              .map((item) => _buildPageFlow(
-                  context, materialNavigationBarItems.indexOf(item), item))
-              .toList(),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentlySelectedIndex,
-          items: materialNavigationBarItems
-              .map(
-                (item) => item.bottomNavigationBarItem,
-              )
-              .toList(),
-          onTap: onTabSelected,
+  Widget build(BuildContext context) => WillPopScope(
+        // We're preventing the root navigator from popping and closing the app
+        // when the back button is pressed and the inner navigator can handle
+        // it. That occurs when the inner has more than one page on its stack.
+        // You can comment the onWillPop callback and watch the "bug".
+        onWillPop: () async => !await widget
+            .navigationBarItems[_currentlySelectedIndex]
+            .navigatorKey
+            .currentState
+            .maybePop(),
+        child: Scaffold(
+          // The Stack is what allows us to retain state across tab
+          // switches by keeping all of our views in the widget tree.
+          body: Stack(
+            fit: StackFit.expand,
+            children: materialNavigationBarItems
+                .map(
+                  (item) => _buildPageFlow(
+                    context,
+                    materialNavigationBarItems.indexOf(item),
+                    item,
+                  ),
+                )
+                .toList(),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _currentlySelectedIndex,
+            items: materialNavigationBarItems
+                .map(
+                  (item) => item.bottomNavigationBarItem,
+                )
+                .toList(),
+            onTap: onTabSelected,
+          ),
         ),
       );
 
