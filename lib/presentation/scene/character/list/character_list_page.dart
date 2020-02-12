@@ -20,7 +20,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
         appBar: AppBar(
           title: const Text('Characters'),
         ),
-        body: StreamBuilder<CharacterListResponseState>(
+        body: StreamBuilder(
           stream: _bloc.onNewState,
           builder: (context, snapshot) =>
               AsyncSnapshotResponseView<Loading, Error, Success>(

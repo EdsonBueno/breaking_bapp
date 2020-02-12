@@ -34,8 +34,7 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      StreamBuilder<CharacterDetailResponseState>(
+  Widget build(BuildContext context) => StreamBuilder(
         stream: _bloc.onNewState,
         builder: (context, snapshot) {
           final snapshotData = snapshot.data;

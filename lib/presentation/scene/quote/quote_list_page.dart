@@ -20,7 +20,7 @@ class _QuoteListPageState extends State<QuoteListPage> {
         appBar: AppBar(
           title: const Text('Quotes'),
         ),
-        body: StreamBuilder<QuoteListResponseState>(
+        body: StreamBuilder(
           stream: _bloc.onNewState,
           builder: (context, snapshot) =>
               AsyncSnapshotResponseView<Loading, Error, Success>(
