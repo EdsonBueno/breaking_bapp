@@ -16,7 +16,12 @@ class QuoteListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 0),
+        padding: const EdgeInsets.only(
+          left: 16,
+          right: 16,
+          top: 16,
+          bottom: 0,
+        ),
         child: Column(
           children: <Widget>[
             Text('"${quote.text}"'),
