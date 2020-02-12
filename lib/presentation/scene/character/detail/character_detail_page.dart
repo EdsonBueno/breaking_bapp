@@ -1,7 +1,7 @@
-import 'package:breaking_bapp/data_source.dart';
-import 'package:breaking_bapp/model/character_detail.dart';
+import 'package:breaking_bapp/presentation/common/async_snapshot_response_view.dart';
 import 'package:breaking_bapp/presentation/common/labeled_text.dart';
-import 'package:breaking_bapp/presentation/common/response_view.dart';
+import 'package:breaking_bapp/presentation/scene/character/detail/character_detail_bloc.dart';
+import 'package:breaking_bapp/presentation/scene/character/detail/character_detail_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -23,119 +23,95 @@ class CharacterDetailPage extends StatefulWidget {
 }
 
 class _CharacterDetailPageState extends State<CharacterDetailPage> {
-  /// An object that identifies the currently active Future call. Used to avoid
-  /// calling setState under two conditions:
-  /// 1 - If this state is already disposed, e.g. if the user left this page
-  /// before the Future completion.
-  /// 2 - From duplicated Future calls, if somehow we call _fetchCharacter
-  /// two times in a row.
-  Object _activeCallbackIdentity;
-
-  bool _isLoading = true;
-  bool _hasError = false;
-  CharacterDetail _character;
+  CharacterDetailBloc _bloc;
   static const _bodyItemsSpacing = 8.0;
 
   @override
   void initState() {
-    _fetchCharacter();
+    _bloc =
+        CharacterDetailBloc(characterName: widget.name, characterId: widget.id);
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text(_character?.name ?? ''),
-        ),
-        body: _buildScaffoldBody(context),
+  Widget build(BuildContext context) =>
+      StreamBuilder<CharacterDetailResponseState>(
+        stream: _bloc.onNewState,
+        builder: (context, snapshot) {
+          final snapshotData = snapshot.data;
+          final appBarTitle =
+              snapshotData is Success ? snapshotData.character.name : '';
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(appBarTitle),
+            ),
+            body: _buildScaffoldBody(context, snapshot),
+          );
+        },
       );
 
-  Widget _buildScaffoldBody(BuildContext context) => ResponseView(
-        hasError: _hasError,
-        isLoading: _isLoading,
-        onTryAgainTap: _fetchCharacter,
-        contentWidgetBuilder: (context) => Padding(
-          padding: const EdgeInsets.all(
-            _bodyItemsSpacing,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Center(
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(_character.pictureUrl),
+  Widget _buildScaffoldBody(BuildContext context, AsyncSnapshot snapshot) =>
+      AsyncSnapshotResponseView<Loading, Error, Success>(
+        snapshot: snapshot,
+        onTryAgainTap: () => _bloc.onTryAgain.add(null),
+        contentWidgetBuilder: (context, successState) {
+          final character = successState.character;
+          return Padding(
+            padding: const EdgeInsets.all(
+              _bodyItemsSpacing,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Center(
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: NetworkImage(character.pictureUrl),
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              LabeledText(
-                label: 'Name',
-                description: _character.name,
-                horizontalAndBottomPadding: _bodyItemsSpacing,
-              ),
-              LabeledText(
-                label: 'Nickname',
-                description: _character.nickname,
-                horizontalAndBottomPadding: _bodyItemsSpacing,
-              ),
-              LabeledText(
-                label: 'Actor Name',
-                description: _character.actorName,
-                horizontalAndBottomPadding: _bodyItemsSpacing,
-              ),
-              LabeledText(
-                label: 'Vital Status',
-                description: _character.vitalStatus,
-                horizontalAndBottomPadding: _bodyItemsSpacing,
-              ),
-              LabeledText(
-                label: 'Occupations',
-                description: _character.occupations.join(', '),
-                horizontalAndBottomPadding: _bodyItemsSpacing,
-              ),
-              LabeledText(
-                label: 'Seasons',
-                description: _character.seasons.join(', '),
-                horizontalAndBottomPadding: _bodyItemsSpacing,
-              ),
-            ],
-          ),
-        ),
+                const SizedBox(
+                  height: 24,
+                ),
+                LabeledText(
+                  label: 'Name',
+                  description: character.name,
+                  horizontalAndBottomPadding: _bodyItemsSpacing,
+                ),
+                LabeledText(
+                  label: 'Nickname',
+                  description: character.nickname,
+                  horizontalAndBottomPadding: _bodyItemsSpacing,
+                ),
+                LabeledText(
+                  label: 'Actor Name',
+                  description: character.actorName,
+                  horizontalAndBottomPadding: _bodyItemsSpacing,
+                ),
+                LabeledText(
+                  label: 'Vital Status',
+                  description: character.vitalStatus,
+                  horizontalAndBottomPadding: _bodyItemsSpacing,
+                ),
+                LabeledText(
+                  label: 'Occupations',
+                  description: character.occupations.join(', '),
+                  horizontalAndBottomPadding: _bodyItemsSpacing,
+                ),
+                LabeledText(
+                  label: 'Seasons',
+                  description: character.seasons.join(', '),
+                  horizontalAndBottomPadding: _bodyItemsSpacing,
+                ),
+              ],
+            ),
+          );
+        },
       );
 
   @override
   void dispose() {
-    _activeCallbackIdentity = null;
+    _bloc.dispose();
     super.dispose();
-  }
-
-  Future<void> _fetchCharacter() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    final callbackIdentity = Object();
-    _activeCallbackIdentity = callbackIdentity;
-
-    try {
-      final fetchedCharacter =
-          await DataSource.getCharacterDetail(id: widget.id, name: widget.name);
-      if (callbackIdentity == _activeCallbackIdentity) {
-        setState(() {
-          _character = fetchedCharacter;
-          _isLoading = false;
-          _hasError = false;
-        });
-      }
-    } on Exception {
-      if (callbackIdentity == _activeCallbackIdentity) {
-        setState(() {
-          _hasError = true;
-          _isLoading = false;
-        });
-      }
-    }
   }
 }
