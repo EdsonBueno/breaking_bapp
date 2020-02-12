@@ -21,8 +21,10 @@ class DataSource {
         ),
       );
 
-  static Future<CharacterDetail> getCharacterDetail(
-      {String name, int id}) async {
+  static Future<CharacterDetail> getCharacterDetail({
+    String name,
+    int id,
+  }) async {
     assert(name != null || id != null);
     return http
         .get(
@@ -77,8 +79,8 @@ class _ApiUrlBuilder {
   static String characterById(int id) => '$_baseUrl$_charactersResource$id';
 
   static String characterByName(String name) => '$_baseUrl$_charactersResource?'
-      // The API expects us to encode our query string arguments with '+' instead of
-      //  spacing.
+      // The API expects us to encode our query string arguments with '+'
+      // instead of spacing.
       'name=${name.replaceAll(' ', '+')}';
 
   static String quoteList() => '$_baseUrl$_quotesResource?'

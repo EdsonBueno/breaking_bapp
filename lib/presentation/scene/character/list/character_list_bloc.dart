@@ -21,12 +21,10 @@ class CharacterListBloc {
   final _onTryAgainSubject = StreamController<void>();
   Sink<void> get onTryAgain => _onTryAgainSubject.sink;
 
-  final _onNewStateSubject = BehaviorSubject<CharacterListState>.seeded(
-    Loading(),
-  );
-  Stream<CharacterListState> get onNewState => _onNewStateSubject;
+  final _onNewStateSubject = BehaviorSubject<CharacterListResponseState>();
+  Stream<CharacterListResponseState> get onNewState => _onNewStateSubject;
 
-  Stream<CharacterListState> _fetchCharacterSummaryList() async* {
+  Stream<CharacterListResponseState> _fetchCharacterSummaryList() async* {
     yield Loading();
 
     try {

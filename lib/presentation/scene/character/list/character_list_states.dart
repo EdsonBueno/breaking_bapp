@@ -1,13 +1,13 @@
 import 'package:breaking_bapp/model/character_summary.dart';
 
-abstract class CharacterListState {}
+abstract class CharacterListResponseState {}
 
-class Success extends CharacterListState {
+class Success implements CharacterListResponseState {
   Success(this.list);
 
   final List<CharacterSummary> list;
 }
 
-class Loading extends CharacterListState {}
+class Loading implements CharacterListResponseState {}
 
-class Error extends CharacterListState {}
+class Error implements CharacterListResponseState {}
