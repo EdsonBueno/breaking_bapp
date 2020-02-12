@@ -26,7 +26,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
               AsyncSnapshotResponseView<Loading, Error, Success>(
             snapshot: snapshot,
             onTryAgainTap: () => _bloc.onTryAgain.add(null),
-            contentWidgetBuilder: (context, successState) {
+            successWidgetBuilder: (context, successState) {
               final characterSummaryList = successState.list;
               return ListView.builder(
                 itemCount: characterSummaryList.length,

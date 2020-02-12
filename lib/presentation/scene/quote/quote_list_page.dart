@@ -26,7 +26,7 @@ class _QuoteListPageState extends State<QuoteListPage> {
               AsyncSnapshotResponseView<Loading, Error, Success>(
             snapshot: snapshot,
             onTryAgainTap: () => _bloc.onTryAgain.add(null),
-            contentWidgetBuilder: (context, successState) {
+            successWidgetBuilder: (context, successState) {
               final quoteList = successState.list;
               return ListView.separated(
                 itemCount: quoteList.length,

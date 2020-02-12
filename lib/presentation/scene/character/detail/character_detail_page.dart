@@ -55,7 +55,7 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
       AsyncSnapshotResponseView<Loading, Error, Success>(
         snapshot: snapshot,
         onTryAgainTap: () => _bloc.onTryAgain.add(null),
-        contentWidgetBuilder: (context, successState) {
+        successWidgetBuilder: (context, successState) {
           final character = successState.character;
           return Padding(
             padding: const EdgeInsets.all(

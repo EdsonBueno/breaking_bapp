@@ -8,11 +8,11 @@ import 'package:flutter/widgets.dart';
 class AsyncSnapshotResponseView<Loading, Error, Success>
     extends StatelessWidget {
   AsyncSnapshotResponseView({
-    @required this.contentWidgetBuilder,
+    @required this.successWidgetBuilder,
     @required this.snapshot,
     this.onTryAgainTap,
     Key key,
-  })  : assert(contentWidgetBuilder != null),
+  })  : assert(successWidgetBuilder != null),
         assert(snapshot != null),
         assert(Loading != dynamic),
         assert(Error != dynamic),
@@ -22,7 +22,7 @@ class AsyncSnapshotResponseView<Loading, Error, Success>
   final AsyncSnapshot snapshot;
   final GestureTapCallback onTryAgainTap;
   final Widget Function(BuildContext context, Success success)
-      contentWidgetBuilder;
+      successWidgetBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class AsyncSnapshotResponseView<Loading, Error, Success>
     }
 
     if (snapshotData is Success) {
-      return contentWidgetBuilder(context, snapshotData);
+      return successWidgetBuilder(context, snapshotData);
     }
 
     throw UnknownStateTypeException();
