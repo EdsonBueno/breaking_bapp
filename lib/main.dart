@@ -1,4 +1,5 @@
 import 'package:breaking_bapp/presentation/home_screen.dart';
+import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:breaking_bapp/presentation/scene/character/detail/character_detail_page.dart';
 import 'package:breaking_bapp/presentation/scene/character/list/character_list_page.dart';
 import 'package:breaking_bapp/presentation/scene/quote/quote_list_page.dart';
@@ -19,13 +20,13 @@ void main() {
               ),
             )
             ..define(
-              'characters',
+              RouteNameBuilder.charactersResource,
               handler: Handler(
-                handlerFunc: (context, _) => CharacterListPage(),
+                handlerFunc: (context, params) => CharacterListPage(),
               ),
             )
             ..define(
-              'characters/:id',
+              '${RouteNameBuilder.charactersResource}/:id',
               transitionType: TransitionType.native,
               handler: Handler(
                 handlerFunc: (_, params) {
@@ -37,23 +38,22 @@ void main() {
               ),
             )
             ..define(
-              'quotes',
+              RouteNameBuilder.quotesResource,
               handler: Handler(
                 handlerFunc: (context, _) => QuoteListPage(),
               ),
             )
             ..define(
-              'character',
-              transitionType: TransitionType.nativeModal,
-              handler: Handler(
-                handlerFunc: (_, params) {
-                  final name = params['name'][0];
-                  return CharacterDetailPage(
-                    name: name,
-                  );
-                },
-              ),
-            ),
+                '${RouteNameBuilder.quotesResource}/${RouteNameBuilder.authorsResource}',
+                transitionType: TransitionType.nativeModal, handler: Handler(
+              handlerFunc: (_, params) {
+                final name =
+                    params[RouteNameBuilder.authorNameQueryParameterName][0];
+                return CharacterDetailPage(
+                  name: name,
+                );
+              },
+            )),
         ),
         ProxyProvider<Router, RouteFactory>(
           update: (context, router, _) => router.generator,
