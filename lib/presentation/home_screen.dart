@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icon(Icons.people),
       ),
       navigatorKey: GlobalKey<NavigatorState>(),
-      initialRouteName: '/characters',
+      initialRouteName: 'characters',
     ),
     BottomNavigationTab(
       bottomNavigationBarItem: BottomNavigationBarItem(
@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icon(Icons.format_quote),
       ),
       navigatorKey: GlobalKey<NavigatorState>(),
-      initialRouteName: '/quotes',
+      initialRouteName: 'quotes',
     )
   ];
 

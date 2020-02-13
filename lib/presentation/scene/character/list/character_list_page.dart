@@ -50,7 +50,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
                 character: character,
                 onTap: () {
                   Navigator.of(context).pushNamed(
-                    '/characters/${character.id}',
+                    'characters/${character.id}',
                   );
                 },
               );

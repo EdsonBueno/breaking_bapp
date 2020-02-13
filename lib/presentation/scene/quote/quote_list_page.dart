@@ -53,7 +53,7 @@ class _QuoteListPageState extends State<QuoteListPage> {
                     context,
                     rootNavigator: true,
                   ).pushNamed(
-                    '/character?name=${quote.authorName}',
+                    'character?name=${quote.authorName}',
                   );
                 },
               );

@@ -13,14 +13,19 @@ void main() {
         Provider<Router>.value(
           value: Router()
             ..define(
-              '/characters',
-              transitionType: TransitionType.native,
+              '/',
+              handler: Handler(
+                handlerFunc: (context, _) => HomeScreen(),
+              ),
+            )
+            ..define(
+              'characters',
               handler: Handler(
                 handlerFunc: (context, _) => CharacterListPage(),
               ),
             )
             ..define(
-              '/characters/:id',
+              'characters/:id',
               transitionType: TransitionType.native,
               handler: Handler(
                 handlerFunc: (_, params) {
@@ -32,14 +37,13 @@ void main() {
               ),
             )
             ..define(
-              '/quotes',
-              transitionType: TransitionType.native,
+              'quotes',
               handler: Handler(
                 handlerFunc: (context, _) => QuoteListPage(),
               ),
             )
             ..define(
-              '/character',
+              'character',
               transitionType: TransitionType.nativeModal,
               handler: Handler(
                 handlerFunc: (_, params) {
@@ -67,7 +71,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
-        home: HomeScreen(),
         onGenerateRoute: Provider.of<RouteFactory>(
           context,
           listen: false,
