@@ -12,6 +12,9 @@ class CharacterListPage extends StatefulWidget {
   _CharacterListPageState createState() => _CharacterListPageState();
 }
 
+// We're using `setState` as the state management approach to keep it as
+// basic as possible and avoid taking the focus off the routing/navigation,
+// which is the purpose of this tutorial.
 class _CharacterListPageState extends State<CharacterListPage> {
   /// An object that identifies the currently active Future call. Used to avoid
   /// calling setState under two conditions:
