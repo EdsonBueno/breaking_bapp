@@ -7,12 +7,12 @@ class BottomNavigationTab {
   const BottomNavigationTab({
     @required this.bottomNavigationBarItem,
     @required this.navigatorKey,
-    @required this.initialPageBuilder,
+    @required this.initialRouteName,
   })  : assert(bottomNavigationBarItem != null),
         assert(navigatorKey != null),
-        assert(initialPageBuilder != null);
+        assert(initialRouteName != null);
 
   final BottomNavigationBarItem bottomNavigationBarItem;
   final GlobalKey<NavigatorState> navigatorKey;
-  final WidgetBuilder initialPageBuilder;
+  final String initialRouteName;
 }

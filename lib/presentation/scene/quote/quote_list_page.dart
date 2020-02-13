@@ -1,7 +1,6 @@
 import 'package:breaking_bapp/data_source.dart';
 import 'package:breaking_bapp/model/quote.dart';
 import 'package:breaking_bapp/presentation/common/response_view.dart';
-import 'package:breaking_bapp/presentation/scene/character/detail/character_detail_page.dart';
 import 'package:breaking_bapp/presentation/scene/quote/quote_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -53,13 +52,8 @@ class _QuoteListPageState extends State<QuoteListPage> {
                   Navigator.of(
                     context,
                     rootNavigator: true,
-                  ).push(
-                    MaterialPageRoute(
-                      fullscreenDialog: true,
-                      builder: (context) => CharacterDetailPage(
-                        name: quote.authorName,
-                      ),
-                    ),
+                  ).pushNamed(
+                    '/character?name=${quote.authorName}',
                   );
                 },
               );

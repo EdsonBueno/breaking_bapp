@@ -1,6 +1,7 @@
 import 'package:breaking_bapp/presentation/common/bottom_navigation/bottom_navigation_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 /// A Scaffold with a configured BottomNavigationBar, separate
 /// Navigators for each tab view and state retaining across tab switches.
@@ -60,7 +61,7 @@ class _MaterialBottomNavigationScaffoldState
               bottomNavigationBarItem: barItem.bottomNavigationBarItem,
               navigatorKey: barItem.navigatorKey,
               subtreeKey: GlobalKey(),
-              initialPageBuilder: barItem.initialPageBuilder,
+              initialRouteName: barItem.initialRouteName,
             ),
           )
           .toList(),
@@ -146,12 +147,14 @@ class _MaterialBottomNavigationScaffoldState
                 // re-selected. That is why a GlobalKey is needed instead of
                 // a simpler ValueKey.
                 key: item.navigatorKey,
-                // Since this isn't the purpose of this sample, we're not using
-                // named routes. Because of that, the onGenerateRoute callback
-                // will be called only for the initial route.
-                onGenerateRoute: (settings) => MaterialPageRoute(
-                  settings: settings,
-                  builder: item.initialPageBuilder,
+                initialRoute: item.initialRouteName,
+                // RouteFactory is nothing but an alias of a function that takes
+                // in a RouteSettings and returns a Route<dynamic>, which is
+                // the type of the onGenerateRoute parameter.
+                // We registered one of these in our main.dart file.
+                onGenerateRoute: Provider.of<RouteFactory>(
+                  context,
+                  listen: false,
                 ),
               )
             : Container(),
@@ -177,16 +180,16 @@ class _MaterialBottomNavigationTab extends BottomNavigationTab {
   const _MaterialBottomNavigationTab({
     @required BottomNavigationBarItem bottomNavigationBarItem,
     @required GlobalKey<NavigatorState> navigatorKey,
-    @required WidgetBuilder initialPageBuilder,
+    @required String initialRouteName,
     @required this.subtreeKey,
   })  : assert(bottomNavigationBarItem != null),
         assert(subtreeKey != null),
-        assert(initialPageBuilder != null),
+        assert(initialRouteName != null),
         assert(navigatorKey != null),
         super(
           bottomNavigationBarItem: bottomNavigationBarItem,
           navigatorKey: navigatorKey,
-          initialPageBuilder: initialPageBuilder,
+          initialRouteName: initialRouteName,
         );
 
   final GlobalKey subtreeKey;
