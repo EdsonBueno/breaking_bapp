@@ -2,34 +2,38 @@ import 'package:breaking_bapp/presentation/common/bottom_navigation/bottom_navig
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-/// A Scaffold with a configured BottomNavigationBar, separat
+/// A Scaffold with a configured BottomNavigationBar, separate
 /// Navigators for each tab view and state retaining across tab switches.
-/// Detailed tutorial: https://edsonbueno.com/2020/01/23/bottom-navigation-in-flutter-mastery-guide/
-class BottomNavigationScaffold extends StatefulWidget {
-  const BottomNavigationScaffold({
+/// Detailed tutorial on this: https://edsonbueno.com/2020/01/23/bottom-navigation-in-flutter-mastery-guide/
+class MaterialBottomNavigationScaffold extends StatefulWidget {
+  const MaterialBottomNavigationScaffold({
     @required this.navigationBarItems,
     @required this.onItemSelected,
+    @required this.selectedIndex,
     Key key,
   })  : assert(navigationBarItems != null),
+        assert(onItemSelected != null),
+        assert(selectedIndex != null),
         super(key: key);
 
-  /// List of the tabs to be displayed with their respective navigator's keys
-  /// and initial widget builders.
+  /// List of the tabs to be displayed with their respective navigator's keys.
   final List<BottomNavigationTab> navigationBarItems;
 
   /// Called when a tab selection occurs.
   final ValueChanged<int> onItemSelected;
 
+  final int selectedIndex;
+
   @override
-  _BottomNavigationScaffoldState createState() =>
-      _BottomNavigationScaffoldState();
+  _MaterialBottomNavigationScaffoldState createState() =>
+      _MaterialBottomNavigationScaffoldState();
 }
 
-class _BottomNavigationScaffoldState extends State<BottomNavigationScaffold>
-    with TickerProviderStateMixin<BottomNavigationScaffold> {
+class _MaterialBottomNavigationScaffoldState
+    extends State<MaterialBottomNavigationScaffold>
+    with TickerProviderStateMixin<MaterialBottomNavigationScaffold> {
   final List<_MaterialBottomNavigationTab> materialNavigationBarItems = [];
   final List<AnimationController> _animationControllers = [];
-  int _currentlySelectedIndex = 0;
 
   /// Controls which tabs should have its content built. This enables us to
   /// lazy instantiate it.
@@ -51,12 +55,14 @@ class _BottomNavigationScaffoldState extends State<BottomNavigationScaffold>
   void _initMaterialNavigationBarItems() {
     materialNavigationBarItems.addAll(
       widget.navigationBarItems
-          .map((barItem) => _MaterialBottomNavigationTab(
-                bottomNavigationBarItem: barItem.bottomNavigationBarItem,
-                navigatorKey: barItem.navigatorKey,
-                initialPageBuilder: barItem.initialPageBuilder,
-                subtreeKey: GlobalKey(),
-              ))
+          .map(
+            (barItem) => _MaterialBottomNavigationTab(
+              bottomNavigationBarItem: barItem.bottomNavigationBarItem,
+              navigatorKey: barItem.navigatorKey,
+              subtreeKey: GlobalKey(),
+              initialPageBuilder: barItem.initialPageBuilder,
+            ),
+          )
           .toList(),
     );
   }
@@ -86,40 +92,29 @@ class _BottomNavigationScaffoldState extends State<BottomNavigationScaffold>
   }
 
   @override
-  Widget build(BuildContext context) => WillPopScope(
-        // We're preventing the root navigator from popping and closing the app
-        // when the back button is pressed and the inner navigator can handle
-        // it. That occurs when the inner has more than one page on its stack.
-        // You can comment the onWillPop callback and watch the "bug".
-        onWillPop: () async => !await widget
-            .navigationBarItems[_currentlySelectedIndex]
-            .navigatorKey
-            .currentState
-            .maybePop(),
-        child: Scaffold(
-          // The Stack is what allows us to retain state across tab
-          // switches by keeping all of our views in the widget tree.
-          body: Stack(
-            fit: StackFit.expand,
-            children: materialNavigationBarItems
-                .map(
-                  (item) => _buildPageFlow(
-                    context,
-                    materialNavigationBarItems.indexOf(item),
-                    item,
-                  ),
-                )
-                .toList(),
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: _currentlySelectedIndex,
-            items: materialNavigationBarItems
-                .map(
-                  (item) => item.bottomNavigationBarItem,
-                )
-                .toList(),
-            onTap: onTabSelected,
-          ),
+  Widget build(BuildContext context) => Scaffold(
+        // The Stack is what allows us to retain state across tab
+        // switches by keeping all of our views in the widget tree.
+        body: Stack(
+          fit: StackFit.expand,
+          children: materialNavigationBarItems
+              .map(
+                (barItem) => _buildPageFlow(
+                  context,
+                  materialNavigationBarItems.indexOf(barItem),
+                  barItem,
+                ),
+              )
+              .toList(),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: widget.selectedIndex,
+          items: materialNavigationBarItems
+              .map(
+                (item) => item.bottomNavigationBarItem,
+              )
+              .toList(),
+          onTap: widget.onItemSelected,
         ),
       );
 
@@ -131,7 +126,7 @@ class _BottomNavigationScaffoldState extends State<BottomNavigationScaffold>
     int tabIndex,
     _MaterialBottomNavigationTab item,
   ) {
-    final isCurrentlySelected = tabIndex == _currentlySelectedIndex;
+    final isCurrentlySelected = tabIndex == widget.selectedIndex;
 
     // We should build the tab content only if it was already built or
     // if it is currently selected.
@@ -156,14 +151,14 @@ class _BottomNavigationScaffoldState extends State<BottomNavigationScaffold>
                 // will be called only for the initial route.
                 onGenerateRoute: (settings) => MaterialPageRoute(
                   settings: settings,
-                  builder: (context) => item.initialPageBuilder(context),
+                  builder: item.initialPageBuilder,
                 ),
               )
             : Container(),
       ),
     );
 
-    if (tabIndex == _currentlySelectedIndex) {
+    if (tabIndex == widget.selectedIndex) {
       _animationControllers[tabIndex].forward();
       return view;
     } else {
@@ -172,25 +167,6 @@ class _BottomNavigationScaffoldState extends State<BottomNavigationScaffold>
         return IgnorePointer(child: view);
       }
       return Offstage(child: view);
-    }
-  }
-
-  /// Called when a tab selection occurs.
-  void onTabSelected(int newIndex) {
-    if (_currentlySelectedIndex == newIndex) {
-      // If the user is re-selecting the tab, the common
-      // behavior is to empty the stack.
-      widget.navigationBarItems[newIndex].navigatorKey.currentState.popUntil(
-        (route) => route.isFirst,
-      );
-    } else {
-      setState(() {
-        _currentlySelectedIndex = newIndex;
-      });
-    }
-
-    if (widget.onItemSelected != null) {
-      widget.onItemSelected(newIndex);
     }
   }
 }
@@ -205,8 +181,8 @@ class _MaterialBottomNavigationTab extends BottomNavigationTab {
     @required this.subtreeKey,
   })  : assert(bottomNavigationBarItem != null),
         assert(subtreeKey != null),
-        assert(navigatorKey != null),
         assert(initialPageBuilder != null),
+        assert(navigatorKey != null),
         super(
           bottomNavigationBarItem: bottomNavigationBarItem,
           navigatorKey: navigatorKey,

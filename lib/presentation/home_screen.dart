@@ -1,4 +1,4 @@
-import 'package:breaking_bapp/presentation/common/bottom_navigation/bottom_navigation_scaffold.dart';
+import 'package:breaking_bapp/presentation/common/bottom_navigation/adaptive_bottom_navigation_scaffold.dart';
 import 'package:breaking_bapp/presentation/common/bottom_navigation/bottom_navigation_tab.dart';
 import 'package:breaking_bapp/presentation/scene/character/list/character_list_page.dart';
 import 'package:breaking_bapp/presentation/scene/quote/quote_list_page.dart';
@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   @override
-  Widget build(BuildContext context) => BottomNavigationScaffold(
+  Widget build(BuildContext context) => AdaptiveBottomNavigationScaffold(
         navigationBarItems: _bottomNavigationTabs,
       );
 }
