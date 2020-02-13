@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-/// Contains the necessary parameters for building a
-/// [BottomNavigationScaffold].
-/// Detailed tutorial: https://edsonbueno.com/2020/01/23/bottom-navigation-in-flutter-mastery-guide/
+/// Contains the necessary parameters for building either a
+/// [MaterialBottomNavigationScaffold] or [CupertinoBottomNavigationScaffold].
+/// Detailed tutorial on this: https://edsonbueno.com/2020/01/23/bottom-navigation-in-flutter-mastery-guide/
 class BottomNavigationTab {
   const BottomNavigationTab({
     @required this.bottomNavigationBarItem,
