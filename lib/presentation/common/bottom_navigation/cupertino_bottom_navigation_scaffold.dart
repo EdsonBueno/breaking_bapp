@@ -1,8 +1,8 @@
 import 'package:breaking_bapp/presentation/common/bottom_navigation/bottom_navigation_tab.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 
 /// Detailed tutorial on this: https://edsonbueno.com/2020/01/23/bottom-navigation-in-flutter-mastery-guide/
 class CupertinoBottomNavigationScaffold extends StatelessWidget {
@@ -43,14 +43,10 @@ class CupertinoBottomNavigationScaffold extends StatelessWidget {
           return CupertinoTabView(
             navigatorKey: barItem.navigatorKey,
             onGenerateRoute: (settings) {
-              // RouteFactory is nothing but an alias of a function that takes
-              // in a RouteSettings and returns a Route<dynamic>, which is
-              // the type of the onGenerateRoute parameter.
-              // We registered one of these in our main.dart file.
-              final routeFactory = Provider.of<RouteFactory>(
-                context,
-                listen: false,
-              );
+              // A function that takes in a RouteSettings and returns a
+              // Route<dynamic>, which is what the onGenerateRoute
+              // parameter is expecting.
+              final routeFactory = Router.appRouter.generator;
               // The [Navigator] widget has a initialRoute parameter, which
               // enables us to define which route it should push as the initial
               // one. See [MaterialBottomNavigationScaffold] for more details.

@@ -1,7 +1,7 @@
 import 'package:breaking_bapp/presentation/common/bottom_navigation/bottom_navigation_tab.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 
 /// A Scaffold with a configured BottomNavigationBar, separate
 /// Navigators for each tab view and state retaining across tab switches.
@@ -152,10 +152,7 @@ class _MaterialBottomNavigationScaffoldState
                 // in a RouteSettings and returns a Route<dynamic>, which is
                 // the type of the onGenerateRoute parameter.
                 // We registered one of these in our main.dart file.
-                onGenerateRoute: Provider.of<RouteFactory>(
-                  context,
-                  listen: false,
-                ),
+                onGenerateRoute: Router.appRouter.generator,
               )
             : Container(),
       ),
