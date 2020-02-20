@@ -56,7 +56,7 @@ class CupertinoBottomNavigationScaffold extends StatelessWidget {
               // delegating it to the CupertinoTabView, which doesn't provides
               // us with a way to set the initialRoute name. The best
               // alternative I could find is to "change" the route's name of
-              // our RouteSettings toour BottomNavigationTab's initialRouteName
+              // our RouteSettings to our BottomNavigationTab's initialRouteName
               // when the onGenerateRoute is being executed for the initial
               // route.
               if (settings.isInitialRoute) {
