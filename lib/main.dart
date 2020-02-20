@@ -1,4 +1,5 @@
 import 'package:breaking_bapp/presentation/home_screen.dart';
+import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:breaking_bapp/presentation/scene/character/detail/character_detail_page.dart';
 import 'package:breaking_bapp/presentation/scene/character/list/character_list_page.dart';
 import 'package:breaking_bapp/presentation/scene/quote/quote_list_page.dart';
@@ -19,7 +20,6 @@ void main() {
     )
     ..define(
       RouteNameBuilder.charactersResource,
-      'characters',
       handler: Handler(
         handlerFunc: (context, params) => CharacterListPage(),
       ),
@@ -27,8 +27,8 @@ void main() {
     ..define(
       '${RouteNameBuilder.charactersResource}/:id',
       // The ':id' syntax is how we tell Fluro to parse whatever comes in
-      // that location and give it a name of 'id'.
-      'characters/:id',
+      // that location and give it a name of 'id'. This is called a Path Param
+      // or URI Param.
       transitionType: TransitionType.native,
       handler: Handler(
         handlerFunc: (context, params) {
@@ -48,22 +48,23 @@ void main() {
     )
     ..define(
       RouteNameBuilder.quotesResource,
-      'quotes',
       handler: Handler(
         handlerFunc: (context, params) => QuoteListPage(),
       ),
     )
     ..define(
-        '${RouteNameBuilder.quotesResource}/${RouteNameBuilder.authorsResource}',
-      'quotes/authors',
+      // This route will accept a Query Param, but notice that, unlike we did
+      // with Path Params, we don't need to pre-define our expected Query
+      // Params in the path String.
+      '${RouteNameBuilder.quotesResource}/${RouteNameBuilder.authorsResource}',
       // You can customize the transition type for every route.
       transitionType: TransitionType.nativeModal,
       handler: Handler(
         handlerFunc: (context, params) {
-          // We extract an expected query string parameter just as we did with
+          // We extract an expected Query Param just as we did with
           // the 'id' in the third route definition. The only difference being
-          // that with query parameters we don't need to specify it in the
-          // route path ('quotes/authors' in this case).
+          // that with Query Params we didn't need to specify it in the
+          // 'quotes/authors' route path.
           final name = params['name'][0];
           return CharacterDetailPage(
             name: name,
@@ -77,11 +78,6 @@ void main() {
   );
 }
 
-// This is the definition of the MyApp Widget, which can be found
-// at the main.dart file. Notice the MaterialApp's onGenerateRoute constructor
-// parameter. It's a function that receives a RouteSettings object, which
-// contains information about the route we're intending to navigate to, and
-// expects us to return a concrete Route.
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
