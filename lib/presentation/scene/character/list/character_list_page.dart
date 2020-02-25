@@ -1,7 +1,6 @@
 import 'package:breaking_bapp/data_source.dart';
 import 'package:breaking_bapp/model/character_summary.dart';
 import 'package:breaking_bapp/presentation/common/response_view.dart';
-import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:breaking_bapp/presentation/scene/character/list/character_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -51,9 +50,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
                 character: character,
                 onTap: () {
                   Navigator.of(context).pushNamed(
-                    RouteNameBuilder.characterById(
-                      character.id,
-                    ),
+                    'characters/${character.id}',
                   );
                 },
               );

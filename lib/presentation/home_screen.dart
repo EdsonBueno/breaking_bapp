@@ -1,6 +1,5 @@
 import 'package:breaking_bapp/presentation/common/bottom_navigation/adaptive_bottom_navigation_scaffold.dart';
 import 'package:breaking_bapp/presentation/common/bottom_navigation/bottom_navigation_tab.dart';
-import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -17,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icon(Icons.people),
       ),
       navigatorKey: GlobalKey<NavigatorState>(),
-      initialRouteName: RouteNameBuilder.characterList(),
+      initialRouteName: 'characters',
     ),
     BottomNavigationTab(
       bottomNavigationBarItem: BottomNavigationBarItem(
@@ -25,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icon(Icons.format_quote),
       ),
       navigatorKey: GlobalKey<NavigatorState>(),
-      initialRouteName: RouteNameBuilder.quoteList(),
+      initialRouteName: 'quotes',
     )
   ];
 

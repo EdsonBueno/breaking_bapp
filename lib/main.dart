@@ -1,5 +1,4 @@
 import 'package:breaking_bapp/presentation/home_screen.dart';
-import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:breaking_bapp/presentation/scene/character/detail/character_detail_page.dart';
 import 'package:breaking_bapp/presentation/scene/character/list/character_list_page.dart';
 import 'package:breaking_bapp/presentation/scene/quote/quote_list_page.dart';
@@ -19,13 +18,13 @@ void main() {
       ),
     )
     ..define(
-      RouteNameBuilder.charactersResource,
+      'characters',
       handler: Handler(
         handlerFunc: (context, params) => CharacterListPage(),
       ),
     )
     ..define(
-      '${RouteNameBuilder.charactersResource}/:id',
+      'characters/:id',
       // The ':id' syntax is how we tell Fluro to parse whatever comes in
       // that location and give it a name of 'id'. This is called a Path Param
       // or URI Param.
@@ -47,7 +46,7 @@ void main() {
       ),
     )
     ..define(
-      RouteNameBuilder.quotesResource,
+      'quotes',
       handler: Handler(
         handlerFunc: (context, params) => QuoteListPage(),
       ),
@@ -56,7 +55,7 @@ void main() {
       // This route will accept a Query Param, but notice that, unlike we did
       // with Path Params, we don't need to pre-define our expected Query
       // Params in the path String.
-      '${RouteNameBuilder.quotesResource}/${RouteNameBuilder.authorsResource}',
+      'quotes/authors',
       // You can customize the transition type for every route.
       transitionType: TransitionType.nativeModal,
       handler: Handler(
