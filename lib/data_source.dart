@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 /// Communicates with the Breaking Bad API.
 // I kept it as simple as possible to avoid taking the focus off the
-// Blocs, which is the real purpose of this sample.
+// Blocs.
 class DataSource {
   static Future<List<CharacterSummary>> getCharacterList() async => http
       .get(
