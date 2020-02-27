@@ -152,6 +152,8 @@ class _MaterialBottomNavigationScaffoldState
                 // in a RouteSettings and returns a Route<dynamic>, which is
                 // the type of the onGenerateRoute parameter.
                 // We registered one of these in our main.dart file.
+                // Detailed tutorial on this routing setup:
+                // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
                 onGenerateRoute: Router.appRouter.generator,
               )
             : Container(),

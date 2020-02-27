@@ -42,6 +42,8 @@ class CupertinoBottomNavigationScaffold extends StatelessWidget {
           final barItem = navigationBarItems[index];
           return CupertinoTabView(
             navigatorKey: barItem.navigatorKey,
+            // Detailed tutorial on this routing setup:
+            // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
             onGenerateRoute: (settings) {
               // A function that takes in a RouteSettings and returns a
               // Route<dynamic>, which is what the onGenerateRoute

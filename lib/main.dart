@@ -7,6 +7,8 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  // Detailed tutorial on this routing setup:
+  // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
   Router.appRouter
     // The '..' syntax is a Dart feature called cascade notation.
     // Further reading: https://dart.dev/guides/language/language-tour#cascade-notation-
