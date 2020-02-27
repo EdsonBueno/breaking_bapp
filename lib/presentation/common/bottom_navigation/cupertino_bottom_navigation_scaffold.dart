@@ -1,4 +1,5 @@
 import 'package:breaking_bapp/presentation/common/bottom_navigation/bottom_navigation_tab.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -41,10 +42,33 @@ class CupertinoBottomNavigationScaffold extends StatelessWidget {
           final barItem = navigationBarItems[index];
           return CupertinoTabView(
             navigatorKey: barItem.navigatorKey,
-            onGenerateRoute: (settings) => CupertinoPageRoute(
-              settings: settings,
-              builder: barItem.initialPageBuilder,
-            ),
+            // Detailed tutorial on this:
+            // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
+            onGenerateRoute: (settings) {
+              // A function that takes in a RouteSettings and returns a
+              // Route<dynamic>, which is what the onGenerateRoute
+              // parameter is expecting.
+              final routeFactory = Router.appRouter.generator;
+              // The [Navigator] widget has a initialRoute parameter, which
+              // enables us to define which route it should push as the initial
+              // one. See [MaterialBottomNavigationScaffold] for more details.
+              //
+              // The problem is that in the Cupertino version, we're not
+              // instantiating the [Navigator] ourselves, instead we're
+              // delegating it to the CupertinoTabView, which doesn't provides
+              // us with a way to set the initialRoute name. The best
+              // alternative I could find is to "change" the route's name of
+              // our RouteSettings to our BottomNavigationTab's initialRouteName
+              // when the onGenerateRoute is being executed for the initial
+              // route.
+              if (settings.isInitialRoute) {
+                return routeFactory(
+                  settings.copyWith(name: barItem.initialRouteName),
+                );
+              } else {
+                return routeFactory(settings);
+              }
+            },
           );
         },
       );

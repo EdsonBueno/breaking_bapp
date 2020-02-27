@@ -1,5 +1,5 @@
 import 'package:breaking_bapp/presentation/common/async_snapshot_response_view.dart';
-import 'package:breaking_bapp/presentation/scene/character/detail/character_detail_page.dart';
+import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:breaking_bapp/presentation/scene/quote/quote_list_bloc.dart';
 import 'package:breaking_bapp/presentation/scene/quote/quote_list_item.dart';
 import 'package:breaking_bapp/presentation/scene/quote/quote_list_states.dart';
@@ -35,15 +35,14 @@ class _QuoteListPageState extends State<QuoteListPage> {
                   return QuoteListItem(
                     quote: quote,
                     onAuthorNameTap: () {
+                      // Detailed tutorial on this:
+                      // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
                       Navigator.of(
                         context,
                         rootNavigator: true,
-                      ).push(
-                        MaterialPageRoute(
-                          fullscreenDialog: true,
-                          builder: (context) => CharacterDetailPage(
-                            name: quote.authorName,
-                          ),
+                      ).pushNamed(
+                        RouteNameBuilder.quoteAuthorByName(
+                          quote.authorName,
                         ),
                       );
                     },

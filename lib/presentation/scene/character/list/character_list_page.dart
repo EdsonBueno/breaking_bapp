@@ -1,5 +1,5 @@
 import 'package:breaking_bapp/presentation/common/async_snapshot_response_view.dart';
-import 'package:breaking_bapp/presentation/scene/character/detail/character_detail_page.dart';
+import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:breaking_bapp/presentation/scene/character/list/character_list_bloc.dart';
 import 'package:breaking_bapp/presentation/scene/character/list/character_list_item.dart';
 import 'package:breaking_bapp/presentation/scene/character/list/character_list_states.dart';
@@ -35,12 +35,11 @@ class _CharacterListPageState extends State<CharacterListPage> {
                   return CharacterListItem(
                     character: character,
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CharacterDetailPage(
-                            id: character.id,
-                          ),
+                      // Detailed tutorial on this:
+                      // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
+                      Navigator.of(context).pushNamed(
+                        RouteNameBuilder.characterById(
+                          character.id,
                         ),
                       );
                     },
