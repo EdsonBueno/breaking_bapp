@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 /// Communicates with the Breaking Bad API.
 // I kept it as simple as possible to avoid taking the focus off the
-// routing/navigation, which is the real purpose of this sample.
+// Blocs, which is the real purpose of this sample.
 class DataSource {
   static Future<List<CharacterSummary>> getCharacterList() async => http
       .get(
@@ -77,8 +77,8 @@ class _ApiUrlBuilder {
   static String characterById(int id) => '$_baseUrl$_charactersResource$id';
 
   static String characterByName(String name) => '$_baseUrl$_charactersResource?'
-      // The API expects us to encode our query string arguments with '+' instead of
-      //  spacing.
+      // The API expects us to encode our query string arguments with '+'
+      // instead of spacing.
       'name=${name.replaceAll(' ', '+')}';
 
   static String quoteList() => '$_baseUrl$_quotesResource?'

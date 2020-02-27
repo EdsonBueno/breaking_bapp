@@ -1,7 +1,6 @@
 import 'package:breaking_bapp/presentation/common/bottom_navigation/adaptive_bottom_navigation_scaffold.dart';
 import 'package:breaking_bapp/presentation/common/bottom_navigation/bottom_navigation_tab.dart';
-import 'package:breaking_bapp/presentation/scene/character/list/character_list_page.dart';
-import 'package:breaking_bapp/presentation/scene/quote/quote_list_page.dart';
+import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -18,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icon(Icons.people),
       ),
       navigatorKey: GlobalKey<NavigatorState>(),
-      initialPageBuilder: (_) => CharacterListPage(),
+      initialRouteName: RouteNameBuilder.characterList(),
     ),
     BottomNavigationTab(
       bottomNavigationBarItem: BottomNavigationBarItem(
@@ -26,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon: Icon(Icons.format_quote),
       ),
       navigatorKey: GlobalKey<NavigatorState>(),
-      initialPageBuilder: (_) => QuoteListPage(),
+      initialRouteName: RouteNameBuilder.quoteList(),
     )
   ];
 

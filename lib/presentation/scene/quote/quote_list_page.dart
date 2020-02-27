@@ -1,7 +1,7 @@
 import 'package:breaking_bapp/data_source.dart';
 import 'package:breaking_bapp/model/quote.dart';
 import 'package:breaking_bapp/presentation/common/response_view.dart';
-import 'package:breaking_bapp/presentation/scene/character/detail/character_detail_page.dart';
+import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:breaking_bapp/presentation/scene/quote/quote_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -13,29 +13,17 @@ class QuoteListPage extends StatefulWidget {
 }
 
 class _QuoteListPageState extends State<QuoteListPage> {
+  /// An object that identifies the currently active Future call. Used to avoid
+  /// calling setState under two conditions:
+  /// 1 - If this state is already disposed, e.g. if the user left this page
+  /// before the Future completion.
+  /// 2 - From duplicated Future calls, if somehow we call
+  /// _fetchQuoteList two times in a row.
+  Object _activeCallbackIdentity;
+
   List<Quote> _quoteList;
   bool _isLoading = true;
   bool _hasError = false;
-
-  Future<void> _fetchQuoteList() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final fetchedQuoteList = await DataSource.getQuoteList();
-      setState(() {
-        _quoteList = fetchedQuoteList;
-        _isLoading = false;
-        _hasError = false;
-      });
-    } on Exception {
-      setState(() {
-        _hasError = true;
-        _isLoading = false;
-      });
-    }
-  }
 
   @override
   void initState() {
@@ -59,15 +47,14 @@ class _QuoteListPageState extends State<QuoteListPage> {
               return QuoteListItem(
                 quote: quote,
                 onAuthorNameTap: () {
+                  // Detailed tutorial on this:
+                  // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
                   Navigator.of(
                     context,
                     rootNavigator: true,
-                  ).push(
-                    MaterialPageRoute(
-                      fullscreenDialog: true,
-                      builder: (context) => CharacterDetailPage(
-                        name: quote.authorName,
-                      ),
+                  ).pushNamed(
+                    RouteNameBuilder.quoteAuthorByName(
+                      quote.authorName,
                     ),
                   );
                 },
@@ -77,4 +64,37 @@ class _QuoteListPageState extends State<QuoteListPage> {
           ),
         ),
       );
+
+  @override
+  void dispose() {
+    _activeCallbackIdentity = null;
+    super.dispose();
+  }
+
+  Future<void> _fetchQuoteList() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final callbackIdentity = Object();
+    _activeCallbackIdentity = callbackIdentity;
+
+    try {
+      final fetchedQuoteList = await DataSource.getQuoteList();
+      if (callbackIdentity == _activeCallbackIdentity) {
+        setState(() {
+          _quoteList = fetchedQuoteList;
+          _isLoading = false;
+          _hasError = false;
+        });
+      }
+    } on Exception {
+      if (callbackIdentity == _activeCallbackIdentity) {
+        setState(() {
+          _hasError = true;
+          _isLoading = false;
+        });
+      }
+    }
+  }
 }
