@@ -22,7 +22,7 @@ class QuoteListBloc {
   Sink<void> get onTryAgain => _onTryAgainSubject.sink;
 
   final _onNewStateSubject = BehaviorSubject<QuoteListResponseState>();
-  Stream<QuoteListResponseState> get onNewState => _onNewStateSubject;
+  Stream<QuoteListResponseState> get onNewState => _onNewStateSubject.stream;
 
   Stream<QuoteListResponseState> _fetchQuoteList() async* {
     yield Loading();

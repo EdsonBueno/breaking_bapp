@@ -1,4 +1,5 @@
-import 'package:breaking_bapp/presentation/common/async_snapshot_response_view.dart';
+import 'package:breaking_bapp/presentation/common/centered_progress_indicator.dart';
+import 'package:breaking_bapp/presentation/common/error_indicator.dart';
 import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:breaking_bapp/presentation/scene/quote/quote_list_bloc.dart';
 import 'package:breaking_bapp/presentation/scene/quote/quote_list_item.dart';
@@ -22,12 +23,14 @@ class _QuoteListPageState extends State<QuoteListPage> {
         ),
         body: StreamBuilder(
           stream: _bloc.onNewState,
-          builder: (context, snapshot) =>
-              AsyncSnapshotResponseView<Loading, Error, Success>(
-            snapshot: snapshot,
-            onTryAgainTap: () => _bloc.onTryAgain.add(null),
-            successWidgetBuilder: (context, successState) {
-              final quoteList = successState.list;
+          builder: (context, snapshot) {
+            final snapshotData = snapshot.data;
+            if (snapshotData == null || snapshotData is Loading) {
+              return CenteredProgressIndicator();
+            }
+
+            if (snapshotData is Success) {
+              final quoteList = snapshotData.list;
               return ListView.separated(
                 itemCount: quoteList.length,
                 itemBuilder: (context, index) {
@@ -50,8 +53,12 @@ class _QuoteListPageState extends State<QuoteListPage> {
                 },
                 separatorBuilder: (context, index) => const Divider(),
               );
-            },
-          ),
+            }
+
+            return ErrorIndicator(
+              onActionButtonPressed: () => _bloc.onTryAgain.add(null),
+            );
+          },
         ),
       );
 
