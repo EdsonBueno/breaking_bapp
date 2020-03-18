@@ -38,11 +38,11 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
   static const _bodyItemsSpacing = 8.0;
 
   // Vital for identifying our FocusDetector when a rebuild occurs.
-  final Key resumeDetectorKey = UniqueKey();
+  final Key focusDetectorKey = UniqueKey();
 
   @override
   Widget build(BuildContext context) => FocusDetector(
-        key: resumeDetectorKey,
+        key: focusDetectorKey,
         onFocusGained: _fetchCharacter,
         child: Scaffold(
           appBar: AppBar(

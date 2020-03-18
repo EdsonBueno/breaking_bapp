@@ -27,11 +27,11 @@ class _QuoteListPageState extends State<QuoteListPage> {
   bool _hasError = false;
 
   // Vital for identifying our FocusDetector when a rebuild occurs.
-  final Key resumeDetectorKey = UniqueKey();
+  final Key focusDetectorKey = UniqueKey();
 
   @override
   Widget build(BuildContext context) => FocusDetector(
-        key: resumeDetectorKey,
+        key: focusDetectorKey,
         onFocusGained: _fetchQuoteList,
         child: Scaffold(
           appBar: AppBar(

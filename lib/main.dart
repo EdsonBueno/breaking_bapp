@@ -83,7 +83,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'Routing, navigation and deep linking sample',
+        title: 'FocusDetector Example',
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
