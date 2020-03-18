@@ -1,5 +1,6 @@
 import 'package:breaking_bapp/data_source.dart';
 import 'package:breaking_bapp/model/character_detail.dart';
+import 'package:breaking_bapp/presentation/common/focus_detector.dart';
 import 'package:breaking_bapp/presentation/common/labeled_text.dart';
 import 'package:breaking_bapp/presentation/common/response_view.dart';
 import 'package:flutter/material.dart';
@@ -35,19 +36,18 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
   bool _hasError = false;
   CharacterDetail _character;
   static const _bodyItemsSpacing = 8.0;
+  final Key resumeDetectorKey = UniqueKey();
 
   @override
-  void initState() {
-    _fetchCharacter();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text(_character?.name ?? ''),
+  Widget build(BuildContext context) => FocusDetector(
+        key: resumeDetectorKey,
+        onFocusGained: _fetchCharacter,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(_character?.name ?? ''),
+          ),
+          body: _buildScaffoldBody(context),
         ),
-        body: _buildScaffoldBody(context),
       );
 
   Widget _buildScaffoldBody(BuildContext context) => ResponseView(

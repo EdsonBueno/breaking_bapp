@@ -1,5 +1,6 @@
 import 'package:breaking_bapp/data_source.dart';
 import 'package:breaking_bapp/model/character_summary.dart';
+import 'package:breaking_bapp/presentation/common/focus_detector.dart';
 import 'package:breaking_bapp/presentation/common/response_view.dart';
 import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:breaking_bapp/presentation/scene/character/list/character_list_item.dart';
@@ -24,39 +25,41 @@ class _CharacterListPageState extends State<CharacterListPage> {
   List<CharacterSummary> _characterSummaryList;
   bool _isLoading = true;
   bool _hasError = false;
+  final Key resumeDetectorKey = UniqueKey();
 
   @override
-  void initState() {
-    _fetchCharacterSummaryList();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Characters'),
-        ),
-        body: ResponseView(
-          isLoading: _isLoading,
-          hasError: _hasError,
-          onTryAgainTap: _fetchCharacterSummaryList,
-          contentWidgetBuilder: (context) => ListView.builder(
-            itemCount: _characterSummaryList.length,
-            itemBuilder: (context, index) {
-              final character = _characterSummaryList[index];
-              return CharacterListItem(
-                character: character,
-                onTap: () {
-                  // Detailed tutorial on this:
-                  // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
-                  Navigator.of(context).pushNamed(
-                    RouteNameBuilder.characterById(
-                      character.id,
-                    ),
-                  );
-                },
-              );
-            },
+  Widget build(BuildContext context) => FocusDetector(
+        key: resumeDetectorKey,
+        onFocusGained: _fetchCharacterSummaryList,
+        onFocusLost: () {
+          final a = 1;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Characters'),
+          ),
+          body: ResponseView(
+            isLoading: _isLoading,
+            hasError: _hasError,
+            onTryAgainTap: _fetchCharacterSummaryList,
+            contentWidgetBuilder: (context) => ListView.builder(
+              itemCount: _characterSummaryList.length,
+              itemBuilder: (context, index) {
+                final character = _characterSummaryList[index];
+                return CharacterListItem(
+                  character: character,
+                  onTap: () {
+                    // Detailed tutorial on this:
+                    // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
+                    Navigator.of(context).pushNamed(
+                      RouteNameBuilder.characterById(
+                        character.id,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ),
       );

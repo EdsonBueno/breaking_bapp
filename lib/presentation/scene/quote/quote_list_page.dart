@@ -1,5 +1,6 @@
 import 'package:breaking_bapp/data_source.dart';
 import 'package:breaking_bapp/model/quote.dart';
+import 'package:breaking_bapp/presentation/common/focus_detector.dart';
 import 'package:breaking_bapp/presentation/common/response_view.dart';
 import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:breaking_bapp/presentation/scene/quote/quote_list_item.dart';
@@ -24,43 +25,42 @@ class _QuoteListPageState extends State<QuoteListPage> {
   List<Quote> _quoteList;
   bool _isLoading = true;
   bool _hasError = false;
+  final Key resumeDetectorKey = UniqueKey();
 
   @override
-  void initState() {
-    _fetchQuoteList();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Quotes'),
-        ),
-        body: ResponseView(
-          isLoading: _isLoading,
-          hasError: _hasError,
-          onTryAgainTap: _fetchQuoteList,
-          contentWidgetBuilder: (context) => ListView.separated(
-            itemCount: _quoteList.length,
-            itemBuilder: (context, index) {
-              final quote = _quoteList[index];
-              return QuoteListItem(
-                quote: quote,
-                onAuthorNameTap: () {
-                  // Detailed tutorial on this:
-                  // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
-                  Navigator.of(
-                    context,
-                    rootNavigator: true,
-                  ).pushNamed(
-                    RouteNameBuilder.quoteAuthorByName(
-                      quote.authorName,
-                    ),
-                  );
-                },
-              );
-            },
-            separatorBuilder: (context, index) => const Divider(),
+  Widget build(BuildContext context) => FocusDetector(
+        key: resumeDetectorKey,
+        onFocusGained: _fetchQuoteList,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Quotes'),
+          ),
+          body: ResponseView(
+            isLoading: _isLoading,
+            hasError: _hasError,
+            onTryAgainTap: _fetchQuoteList,
+            contentWidgetBuilder: (context) => ListView.separated(
+              itemCount: _quoteList.length,
+              itemBuilder: (context, index) {
+                final quote = _quoteList[index];
+                return QuoteListItem(
+                  quote: quote,
+                  onAuthorNameTap: () {
+                    // Detailed tutorial on this:
+                    // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
+                    Navigator.of(
+                      context,
+                      rootNavigator: true,
+                    ).pushNamed(
+                      RouteNameBuilder.quoteAuthorByName(
+                        quote.authorName,
+                      ),
+                    );
+                  },
+                );
+              },
+              separatorBuilder: (context, index) => const Divider(),
+            ),
           ),
         ),
       );
