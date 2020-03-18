@@ -4,6 +4,7 @@ import 'package:breaking_bapp/presentation/scene/character/detail/character_deta
 import 'package:breaking_bapp/presentation/scene/character/detail/character_detail_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:focus_detector/focus_detector.dart';
 
 /// Page that fetches and displays a character's detailed info based on the
 /// received id.
@@ -24,6 +25,7 @@ class CharacterDetailPage extends StatefulWidget {
 
 class _CharacterDetailPageState extends State<CharacterDetailPage> {
   CharacterDetailBloc _bloc;
+  final _focusDetectorKey = UniqueKey();
   static const _bodyItemsSpacing = 8.0;
 
   @override
@@ -34,20 +36,24 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
   }
 
   @override
-  Widget build(BuildContext context) => StreamBuilder(
-        stream: _bloc.onNewState,
-        builder: (context, snapshot) {
-          final snapshotData = snapshot.data;
-          final appBarTitle =
-              snapshotData is Success ? snapshotData.character.name : '';
+  Widget build(BuildContext context) => FocusDetector(
+        key: _focusDetectorKey,
+        onFocusGained: () => _bloc.onFocusGained.add(null),
+        child: StreamBuilder(
+          stream: _bloc.onNewState,
+          builder: (context, snapshot) {
+            final snapshotData = snapshot.data;
+            final appBarTitle =
+                snapshotData is Success ? snapshotData.character.name : '';
 
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(appBarTitle),
-            ),
-            body: _buildScaffoldBody(context, snapshot),
-          );
-        },
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(appBarTitle),
+              ),
+              body: _buildScaffoldBody(context, snapshot),
+            );
+          },
+        ),
       );
 
   Widget _buildScaffoldBody(BuildContext context, AsyncSnapshot snapshot) =>

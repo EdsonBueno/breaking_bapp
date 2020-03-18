@@ -6,20 +6,27 @@ import 'package:rxdart/rxdart.dart';
 
 class CharacterListBloc {
   CharacterListBloc() {
-    _subscriptions
-      ..add(
-        _fetchCharacterSummaryList().listen(_onNewStateSubject.add),
-      )
-      ..add(
-        _onTryAgainSubject.stream
-            .flatMap((_) => _fetchCharacterSummaryList())
-            .listen(_onNewStateSubject.add),
-      );
+    _subscriptions.add(
+      Rx.merge([
+        _onFocusGainedSubject.stream,
+        _onTryAgainSubject.stream,
+      ])
+          .flatMap(
+            (_) => _fetchCharacterSummaryList(),
+          )
+          .listen(
+            _onNewStateSubject.add,
+          ),
+    );
   }
 
   final _subscriptions = CompositeSubscription();
+
   final _onTryAgainSubject = StreamController<void>();
   Sink<void> get onTryAgain => _onTryAgainSubject.sink;
+
+  final _onFocusGainedSubject = StreamController<void>();
+  Sink<void> get onFocusGained => _onFocusGainedSubject.sink;
 
   final _onNewStateSubject = BehaviorSubject<CharacterListResponseState>();
   Stream<CharacterListResponseState> get onNewState => _onNewStateSubject;
@@ -39,6 +46,7 @@ class CharacterListBloc {
   void dispose() {
     _onTryAgainSubject.close();
     _onNewStateSubject.close();
+    _onFocusGainedSubject.close();
     _subscriptions.dispose();
   }
 }

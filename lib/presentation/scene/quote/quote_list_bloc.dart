@@ -6,20 +6,27 @@ import 'package:rxdart/rxdart.dart';
 
 class QuoteListBloc {
   QuoteListBloc() {
-    _subscriptions
-      ..add(
-        _fetchQuoteList().listen(_onNewStateSubject.add),
-      )
-      ..add(
-        _onTryAgainSubject.stream
-            .flatMap((_) => _fetchQuoteList())
-            .listen(_onNewStateSubject.add),
-      );
+    _subscriptions.add(
+      Rx.merge([
+        _onFocusGainedSubject.stream,
+        _onTryAgainSubject.stream,
+      ])
+          .flatMap(
+            (_) => _fetchQuoteList(),
+          )
+          .listen(
+            _onNewStateSubject.add,
+          ),
+    );
   }
 
   final _subscriptions = CompositeSubscription();
+
   final _onTryAgainSubject = StreamController<void>();
   Sink<void> get onTryAgain => _onTryAgainSubject.sink;
+
+  final _onFocusGainedSubject = StreamController<void>();
+  Sink<void> get onFocusGained => _onFocusGainedSubject.sink;
 
   final _onNewStateSubject = BehaviorSubject<QuoteListResponseState>();
   Stream<QuoteListResponseState> get onNewState => _onNewStateSubject;
@@ -39,6 +46,7 @@ class QuoteListBloc {
   void dispose() {
     _onTryAgainSubject.close();
     _onNewStateSubject.close();
+    _onFocusGainedSubject.close();
     _subscriptions.dispose();
   }
 }
