@@ -11,11 +11,11 @@ class CharacterDetailBloc {
   }) : assert(characterId != null || characterName != null) {
     _subscriptions
       ..add(
-        _fetchCharacterSummaryList().listen(_onNewStateSubject.add),
+        _fetchCharacterDetail().listen(_onNewStateSubject.add),
       )
       ..add(
         _onTryAgainSubject.stream
-            .flatMap((_) => _fetchCharacterSummaryList())
+            .flatMap((_) => _fetchCharacterDetail())
             .listen(_onNewStateSubject.add),
       );
   }
@@ -30,7 +30,7 @@ class CharacterDetailBloc {
   final _onNewStateSubject = BehaviorSubject<CharacterDetailResponseState>();
   Stream<CharacterDetailResponseState> get onNewState => _onNewStateSubject;
 
-  Stream<CharacterDetailResponseState> _fetchCharacterSummaryList() async* {
+  Stream<CharacterDetailResponseState> _fetchCharacterDetail() async* {
     yield Loading();
 
     try {
