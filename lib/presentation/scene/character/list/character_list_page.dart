@@ -1,11 +1,11 @@
 import 'package:breaking_bapp/data_source.dart';
 import 'package:breaking_bapp/model/character_summary.dart';
-import 'package:breaking_bapp/presentation/common/focus_detector.dart';
 import 'package:breaking_bapp/presentation/common/response_view.dart';
 import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:breaking_bapp/presentation/scene/character/list/character_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:focus_detector/focus_detector.dart';
 
 /// Fetches and displays a list of characters' summarized info.
 class CharacterListPage extends StatefulWidget {
@@ -25,6 +25,8 @@ class _CharacterListPageState extends State<CharacterListPage> {
   List<CharacterSummary> _characterSummaryList;
   bool _isLoading = true;
   bool _hasError = false;
+
+  // Vital for identifying our FocusDetector when a rebuild occurs.
   final Key resumeDetectorKey = UniqueKey();
 
   @override
@@ -32,7 +34,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
         key: resumeDetectorKey,
         onFocusGained: _fetchCharacterSummaryList,
         onFocusLost: () {
-          final a = 1;
+          print('CharacterListPage lost focus');
         },
         child: Scaffold(
           appBar: AppBar(

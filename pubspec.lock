@@ -81,6 +81,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  focus_detector:
+    dependency: "direct main"
+    description:
+      name: focus_detector
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
   http:
     dependency: "direct main"
     description:

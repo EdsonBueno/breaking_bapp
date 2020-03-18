@@ -1,11 +1,11 @@
 import 'package:breaking_bapp/data_source.dart';
 import 'package:breaking_bapp/model/quote.dart';
-import 'package:breaking_bapp/presentation/common/focus_detector.dart';
 import 'package:breaking_bapp/presentation/common/response_view.dart';
 import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:breaking_bapp/presentation/scene/quote/quote_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:focus_detector/focus_detector.dart';
 
 /// Fetches and displays a list of popular quotes.
 class QuoteListPage extends StatefulWidget {
@@ -25,6 +25,8 @@ class _QuoteListPageState extends State<QuoteListPage> {
   List<Quote> _quoteList;
   bool _isLoading = true;
   bool _hasError = false;
+
+  // Vital for identifying our FocusDetector when a rebuild occurs.
   final Key resumeDetectorKey = UniqueKey();
 
   @override

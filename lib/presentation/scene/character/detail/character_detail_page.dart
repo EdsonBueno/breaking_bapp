@@ -1,10 +1,10 @@
 import 'package:breaking_bapp/data_source.dart';
 import 'package:breaking_bapp/model/character_detail.dart';
-import 'package:breaking_bapp/presentation/common/focus_detector.dart';
 import 'package:breaking_bapp/presentation/common/labeled_text.dart';
 import 'package:breaking_bapp/presentation/common/response_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:focus_detector/focus_detector.dart';
 
 /// Page that fetches and displays a character's detailed info based on the
 /// received id.
@@ -36,6 +36,8 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
   bool _hasError = false;
   CharacterDetail _character;
   static const _bodyItemsSpacing = 8.0;
+
+  // Vital for identifying our FocusDetector when a rebuild occurs.
   final Key resumeDetectorKey = UniqueKey();
 
   @override
