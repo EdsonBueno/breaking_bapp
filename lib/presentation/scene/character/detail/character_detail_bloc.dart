@@ -11,12 +11,12 @@ class CharacterDetailBloc {
   }) : assert(characterId != null || characterName != null) {
     _subscriptions
       ..add(
-        _fetchCharacterDetail().listen(_onNewStateSubject.add),
+        _fetchCharacterDetail().listen(_onNewStateController.add),
       )
       ..add(
-        _onTryAgainSubject.stream
+        _onTryAgainController.stream
             .flatMap((_) => _fetchCharacterDetail())
-            .listen(_onNewStateSubject.add),
+            .listen(_onNewStateController.add),
       );
   }
 
@@ -24,11 +24,13 @@ class CharacterDetailBloc {
   final String characterName;
 
   final _subscriptions = CompositeSubscription();
-  final _onTryAgainSubject = StreamController<void>();
-  Sink<void> get onTryAgain => _onTryAgainSubject.sink;
+  final _onTryAgainController = StreamController<void>();
+  Sink<void> get onTryAgain => _onTryAgainController.sink;
 
-  final _onNewStateSubject = BehaviorSubject<CharacterDetailResponseState>();
-  Stream<CharacterDetailResponseState> get onNewState => _onNewStateSubject;
+  final _onNewStateController =
+      StreamController<CharacterDetailResponseState>();
+  Stream<CharacterDetailResponseState> get onNewState =>
+      _onNewStateController.stream;
 
   Stream<CharacterDetailResponseState> _fetchCharacterDetail() async* {
     yield Loading();
@@ -46,8 +48,8 @@ class CharacterDetailBloc {
   }
 
   void dispose() {
-    _onTryAgainSubject.close();
-    _onNewStateSubject.close();
+    _onTryAgainController.close();
+    _onNewStateController.close();
     _subscriptions.dispose();
   }
 }

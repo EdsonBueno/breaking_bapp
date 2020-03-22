@@ -1,4 +1,5 @@
-import 'package:breaking_bapp/presentation/common/async_snapshot_response_view.dart';
+import 'package:breaking_bapp/presentation/common/centered_progress_indicator.dart';
+import 'package:breaking_bapp/presentation/common/error_indicator.dart';
 import 'package:breaking_bapp/presentation/common/labeled_text.dart';
 import 'package:breaking_bapp/presentation/scene/character/detail/character_detail_bloc.dart';
 import 'package:breaking_bapp/presentation/scene/character/detail/character_detail_states.dart';
@@ -50,63 +51,69 @@ class _CharacterDetailPageState extends State<CharacterDetailPage> {
         },
       );
 
-  Widget _buildScaffoldBody(BuildContext context, AsyncSnapshot snapshot) =>
-      AsyncSnapshotResponseView<Loading, Error, Success>(
-        snapshot: snapshot,
-        onTryAgainTap: () => _bloc.onTryAgain.add(null),
-        successWidgetBuilder: (context, successState) {
-          final character = successState.character;
-          return Padding(
-            padding: const EdgeInsets.all(
-              _bodyItemsSpacing,
+  Widget _buildScaffoldBody(BuildContext context, AsyncSnapshot snapshot) {
+    final snapshotData = snapshot.data;
+    if (snapshotData == null || snapshotData is Loading) {
+      return CenteredProgressIndicator();
+    }
+
+    if (snapshotData is Success) {
+      final character = snapshotData.character;
+      return Padding(
+        padding: const EdgeInsets.all(
+          _bodyItemsSpacing,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Center(
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: NetworkImage(character.pictureUrl),
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Center(
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(character.pictureUrl),
-                  ),
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
-                LabeledText(
-                  label: 'Name',
-                  description: character.name,
-                  horizontalAndBottomPadding: _bodyItemsSpacing,
-                ),
-                LabeledText(
-                  label: 'Nickname',
-                  description: character.nickname,
-                  horizontalAndBottomPadding: _bodyItemsSpacing,
-                ),
-                LabeledText(
-                  label: 'Actor Name',
-                  description: character.actorName,
-                  horizontalAndBottomPadding: _bodyItemsSpacing,
-                ),
-                LabeledText(
-                  label: 'Vital Status',
-                  description: character.vitalStatus,
-                  horizontalAndBottomPadding: _bodyItemsSpacing,
-                ),
-                LabeledText(
-                  label: 'Occupations',
-                  description: character.occupations.join(', '),
-                  horizontalAndBottomPadding: _bodyItemsSpacing,
-                ),
-                LabeledText(
-                  label: 'Seasons',
-                  description: character.seasons.join(', '),
-                  horizontalAndBottomPadding: _bodyItemsSpacing,
-                ),
-              ],
+            const SizedBox(
+              height: 24,
             ),
-          );
-        },
+            LabeledText(
+              label: 'Name',
+              description: character.name,
+              horizontalAndBottomPadding: _bodyItemsSpacing,
+            ),
+            LabeledText(
+              label: 'Nickname',
+              description: character.nickname,
+              horizontalAndBottomPadding: _bodyItemsSpacing,
+            ),
+            LabeledText(
+              label: 'Actor Name',
+              description: character.actorName,
+              horizontalAndBottomPadding: _bodyItemsSpacing,
+            ),
+            LabeledText(
+              label: 'Vital Status',
+              description: character.vitalStatus,
+              horizontalAndBottomPadding: _bodyItemsSpacing,
+            ),
+            LabeledText(
+              label: 'Occupations',
+              description: character.occupations.join(', '),
+              horizontalAndBottomPadding: _bodyItemsSpacing,
+            ),
+            LabeledText(
+              label: 'Seasons',
+              description: character.seasons.join(', '),
+              horizontalAndBottomPadding: _bodyItemsSpacing,
+            ),
+          ],
+        ),
       );
+    }
+
+    return ErrorIndicator(
+      onActionButtonPressed: () => _bloc.onTryAgain.add(null),
+    );
+  }
 
   @override
   void dispose() {

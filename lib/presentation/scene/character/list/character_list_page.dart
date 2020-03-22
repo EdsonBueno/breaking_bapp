@@ -1,4 +1,5 @@
-import 'package:breaking_bapp/presentation/common/async_snapshot_response_view.dart';
+import 'package:breaking_bapp/presentation/common/centered_progress_indicator.dart';
+import 'package:breaking_bapp/presentation/common/error_indicator.dart';
 import 'package:breaking_bapp/presentation/route_name_builder.dart';
 import 'package:breaking_bapp/presentation/scene/character/list/character_list_bloc.dart';
 import 'package:breaking_bapp/presentation/scene/character/list/character_list_item.dart';
@@ -20,23 +21,26 @@ class _CharacterListPageState extends State<CharacterListPage> {
         appBar: AppBar(
           title: const Text('Characters'),
         ),
+        // We could be listening the BLoC's Stream on the initState method,
+        // storing the data on a variable whenever it arrives, and then calling
+        // setState to force the widget to rebuild, but instead, we're using
+        // this `StreamBuilder` helper class which does it all for us.
         body: StreamBuilder(
           stream: _bloc.onNewState,
-          builder: (context, snapshot) =>
-              AsyncSnapshotResponseView<Loading, Error, Success>(
-            snapshot: snapshot,
-            onTryAgainTap: () => _bloc.onTryAgain.add(null),
-            successWidgetBuilder: (context, successState) {
-              final characterSummaryList = successState.list;
+          builder: (context, snapshot) {
+            final snapshotData = snapshot.data;
+            if (snapshotData == null || snapshotData is Loading) {
+              return CenteredProgressIndicator();
+            }
+
+            if (snapshotData is Success) {
               return ListView.builder(
-                itemCount: characterSummaryList.length,
+                itemCount: snapshotData.list.length,
                 itemBuilder: (context, index) {
-                  final character = characterSummaryList[index];
+                  final character = snapshotData.list[index];
                   return CharacterListItem(
                     character: character,
                     onTap: () {
-                      // Detailed tutorial on this:
-                      // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
                       Navigator.of(context).pushNamed(
                         RouteNameBuilder.characterById(
                           character.id,
@@ -46,8 +50,12 @@ class _CharacterListPageState extends State<CharacterListPage> {
                   );
                 },
               );
-            },
-          ),
+            }
+
+            return ErrorIndicator(
+              onActionButtonPressed: () => _bloc.onTryAgain.add(null),
+            );
+          },
         ),
       );
 

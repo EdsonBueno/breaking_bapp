@@ -8,21 +8,21 @@ class QuoteListBloc {
   QuoteListBloc() {
     _subscriptions
       ..add(
-        _fetchQuoteList().listen(_onNewStateSubject.add),
+        _fetchQuoteList().listen(_onNewStateController.add),
       )
       ..add(
-        _onTryAgainSubject.stream
+        _onTryAgainController.stream
             .flatMap((_) => _fetchQuoteList())
-            .listen(_onNewStateSubject.add),
+            .listen(_onNewStateController.add),
       );
   }
 
   final _subscriptions = CompositeSubscription();
-  final _onTryAgainSubject = StreamController<void>();
-  Sink<void> get onTryAgain => _onTryAgainSubject.sink;
+  final _onTryAgainController = StreamController<void>();
+  Sink<void> get onTryAgain => _onTryAgainController.sink;
 
-  final _onNewStateSubject = BehaviorSubject<QuoteListResponseState>();
-  Stream<QuoteListResponseState> get onNewState => _onNewStateSubject.stream;
+  final _onNewStateController = StreamController<QuoteListResponseState>();
+  Stream<QuoteListResponseState> get onNewState => _onNewStateController.stream;
 
   Stream<QuoteListResponseState> _fetchQuoteList() async* {
     yield Loading();
@@ -37,8 +37,8 @@ class QuoteListBloc {
   }
 
   void dispose() {
-    _onTryAgainSubject.close();
-    _onNewStateSubject.close();
+    _onTryAgainController.close();
+    _onNewStateController.close();
     _subscriptions.dispose();
   }
 }
