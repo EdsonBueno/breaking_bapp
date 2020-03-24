@@ -37,6 +37,16 @@ class CharacterListBloc {
   // part is only useful internally.
   Sink<void> get onTryAgain => _onTryAgainController.sink;
 
+  // `CharacterListResponseState` is an abstract class with three
+  // concrete implementations: `Loading`, `Error` and `Success`.
+  // They're defined at `character_list_states.dart`.
+  // They represent the possible states of our page. It's a useful pattern
+  // for whenever you have a situation where only one of N states can
+  // happen at a time, e.g., you can't be loading and showing the list at the
+  // same time.
+  // It's perfectly possible to have more than one Stream exposed to the
+  // widget, one for each independent part of the page, but this isn't the case
+  // here.
   final _onNewStateController = StreamController<CharacterListResponseState>();
 
   // Similarly, the _onNewStateController is also private to the BLoC.
