@@ -59,7 +59,7 @@ class CupertinoBottomNavigationScaffold extends StatelessWidget {
               // our RouteSettings to our BottomNavigationTab's initialRouteName
               // when the onGenerateRoute is being executed for the initial
               // route.
-              if (settings.isInitialRoute) {
+              if (settings.name == '/') {
                 return routeFactory(
                   settings.copyWith(name: barItem.initialRouteName),
                 );
