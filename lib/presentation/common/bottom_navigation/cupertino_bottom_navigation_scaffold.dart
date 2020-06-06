@@ -43,10 +43,6 @@ class CupertinoBottomNavigationScaffold extends StatelessWidget {
           return CupertinoTabView(
             navigatorKey: barItem.navigatorKey,
             onGenerateRoute: (settings) {
-              // A function that takes in a RouteSettings and returns a
-              // Route<dynamic>, which is what the onGenerateRoute
-              // parameter is expecting.
-              final routeFactory = Router.appRouter.generator;
               // The [Navigator] widget has a initialRoute parameter, which
               // enables us to define which route it should push as the initial
               // one. See [MaterialBottomNavigationScaffold] for more details.
@@ -59,13 +55,19 @@ class CupertinoBottomNavigationScaffold extends StatelessWidget {
               // our RouteSettings to our BottomNavigationTab's initialRouteName
               // when the onGenerateRoute is being executed for the initial
               // route.
+              var routeSettings = settings;
               if (settings.name == '/') {
-                return routeFactory(
-                  settings.copyWith(name: barItem.initialRouteName),
-                );
-              } else {
-                return routeFactory(settings);
+                routeSettings =
+                    settings.copyWith(name: barItem.initialRouteName);
               }
+
+              return Router.appRouter
+                  .matchRoute(
+                    context,
+                    routeSettings.name,
+                    routeSettings: routeSettings,
+                  )
+                  .route;
             },
           );
         },
