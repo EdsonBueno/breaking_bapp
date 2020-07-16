@@ -7,4 +7,4 @@ This repository is the sample for some in-depth articles on Flutter (work in pro
 1. [Spotless Routing and Navigation](https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/)
 2. [Bringing onResume/viewDidAppear onPause/viewDidDisappear to Flutter](https://edsonbueno.com/2020/03/19/bringing-on-resume-view-did-appear-to-flutter/)
 
-<img src="/android_sample.gif?raw=true" alt="Breaking Bapp running on Android" width="250" height="417"/>
+<img src="/android-sample.gif?raw=true" alt="Breaking Bapp running on Android" width="250" height="417"/>
