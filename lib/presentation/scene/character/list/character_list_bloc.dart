@@ -6,10 +6,6 @@ import 'package:rxdart/rxdart.dart';
 
 class CharacterListBloc {
   CharacterListBloc() {
-    // The return type of the `listen` func is a `StreamSubscription`. You need
-    // to store your subscriptions for being able to access and cancel
-    // them if the widget (and consequently the BLoC) gets disposed.
-
     // We call "listen" twice in this BLoC, so we have two subscriptions. In
     // order to manage them together, we add both to a `CompositeSubscription`.
     _subscriptions
@@ -32,26 +28,11 @@ class CharacterListBloc {
 
   final _onTryAgainController = StreamController<void>();
 
-  // Our _onTryAgainController is private to the BLoC. Instead of exposing it
-  // entirely to the widget, we expose only its `Sink` side, as the `Stream`
-  // part is only useful internally.
   Sink<void> get onTryAgain => _onTryAgainController.sink;
 
-  // `CharacterListResponseState` is an abstract class with three
-  // concrete implementations: `Loading`, `Error` and `Success`.
-  // They're defined at `character_list_states.dart`.
-  // They represent the possible states of our page. It's a useful pattern
-  // for whenever you have a situation where only one of N states can
-  // happen at a time, e.g., you can't be loading and showing the list at the
-  // same time.
-  // It's perfectly possible to have more than one Stream exposed to the
-  // widget, one for each independent part of the page, but this isn't the case
-  // here.
-  final _onNewStateController = StreamController<CharacterListResponseState>();
+  final _onNewStateController =
+      BehaviorSubject<CharacterListResponseState>.seeded(Loading());
 
-  // Similarly, the _onNewStateController is also private to the BLoC.
-  // Instead of exposing it entirely to the widget, we expose only its `Stream`
-  // side, as the `Sink` part is only useful to the BLoC.
   Stream<CharacterListResponseState> get onNewState =>
       _onNewStateController.stream;
 
@@ -70,9 +51,8 @@ class CharacterListBloc {
     }
   }
 
-  // Will be called by the widget when it gets disposed.
   void dispose() {
-    // We need to close every instance of a `StreamController`.
+    // We need to close every instance of `StreamController`.
     _onTryAgainController.close();
     _onNewStateController.close();
     _subscriptions.dispose();

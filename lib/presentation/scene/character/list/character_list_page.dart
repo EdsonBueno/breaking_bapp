@@ -21,10 +21,6 @@ class _CharacterListPageState extends State<CharacterListPage> {
         appBar: AppBar(
           title: const Text('Characters'),
         ),
-        // We could be listening the BLoC's Stream on the initState method,
-        // storing the data on a variable whenever it arrives, and then calling
-        // setState to force the widget to rebuild, but instead, we're using
-        // this `StreamBuilder` helper class which does it all for us.
         body: StreamBuilder(
           stream: _bloc.onNewState,
           builder: (context, snapshot) {
