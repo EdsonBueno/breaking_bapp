@@ -45,10 +45,6 @@ class CupertinoBottomNavigationScaffold extends StatelessWidget {
             // Detailed tutorial on this routing setup:
             // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
             onGenerateRoute: (settings) {
-              // A function that takes in a RouteSettings and returns a
-              // Route<dynamic>, which is what the onGenerateRoute
-              // parameter is expecting.
-              final routeFactory = Router.appRouter.generator;
               // The [Navigator] widget has a initialRoute parameter, which
               // enables us to define which route it should push as the initial
               // one. See [MaterialBottomNavigationScaffold] for more details.
@@ -62,14 +58,26 @@ class CupertinoBottomNavigationScaffold extends StatelessWidget {
               // when the onGenerateRoute is being executed for the initial
               // route.
               if (settings.name == '/') {
-                return routeFactory(
+                return generateRoute(
                   settings.copyWith(name: barItem.initialRouteName),
+                  context,
                 );
               } else {
-                return routeFactory(settings);
+                return generateRoute(settings, context);
               }
             },
           );
         },
       );
+
+  Route<dynamic> generateRoute(
+    RouteSettings routeSettings,
+    BuildContext context,
+  ) =>
+      Router.appRouter
+          .matchRoute(
+            context,
+            routeSettings.name,
+          )
+          .route;
 }
