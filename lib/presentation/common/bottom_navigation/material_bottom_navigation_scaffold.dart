@@ -148,11 +148,14 @@ class _MaterialBottomNavigationScaffoldState
                 // a simpler ValueKey.
                 key: item.navigatorKey,
                 initialRoute: item.initialRouteName,
-                // RouteFactory is nothing but an alias of a function that takes
-                // in a RouteSettings and returns a Route<dynamic>, which is
-                // the type of the onGenerateRoute parameter.
-                // We registered one of these in our main.dart file.
-                onGenerateRoute: Router.appRouter.generator,
+                // Detailed tutorial on this routing setup:
+                // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
+                onGenerateRoute: (settings) => Router.appRouter
+                    .matchRoute(
+                      context,
+                      settings.name,
+                    )
+                    .route,
               )
             : Container(),
       ),
