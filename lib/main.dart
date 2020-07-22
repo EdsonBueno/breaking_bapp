@@ -87,11 +87,13 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
-        // We could have written it as:
-        // onGenerateRoute: (routeSettings) =>
-        //    Router.appRouter.generator(routeSettings)
-        // This shorter syntax is a Dart feature called a `tear-off`.
-        // https://dart.dev/guides/language/effective-dart/usage#dont-create-a-lambda-when-a-tear-off-will-do
-        onGenerateRoute: Router.appRouter.generator,
+        // Detailed tutorial on this routing setup:
+        // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
+        onGenerateRoute: (settings) => Router.appRouter
+            .matchRoute(
+              context,
+              settings.name,
+            )
+            .route,
       );
 }
