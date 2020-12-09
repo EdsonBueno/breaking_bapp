@@ -72,7 +72,7 @@ class CupertinoBottomNavigationScaffold extends StatelessWidget {
     RouteSettings routeSettings,
     BuildContext context,
   ) =>
-      Router.appRouter
+      FluroRouter.appRouter
           .matchRoute(
             context,
             routeSettings.name,
