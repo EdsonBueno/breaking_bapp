@@ -61,7 +61,7 @@ class CupertinoBottomNavigationScaffold extends StatelessWidget {
                     settings.copyWith(name: barItem.initialRouteName);
               }
 
-              return Router.appRouter
+              return FluroRouter.appRouter
                   .matchRoute(
                     context,
                     routeSettings.name,
