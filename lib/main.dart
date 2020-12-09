@@ -6,7 +6,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  Router.appRouter
+  FluroRouter.appRouter
     // The '..' syntax is a Dart feature called cascade notation.
     // Further reading: https://dart.dev/guides/language/language-tour#cascade-notation-
     ..define(
@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
-        onGenerateRoute: (settings) => Router.appRouter
+        onGenerateRoute: (settings) => FluroRouter.appRouter
             .matchRoute(context, settings.name, routeSettings: settings)
             .route,
       );

@@ -152,7 +152,7 @@ class _MaterialBottomNavigationScaffoldState
                 // in a RouteSettings and returns a Route<dynamic>, which is
                 // the type of the onGenerateRoute parameter.
                 // We registered one of these in our main.dart file.
-                onGenerateRoute: (settings) => Router.appRouter
+                onGenerateRoute: (settings) => FluroRouter.appRouter
                     .matchRoute(context, settings.name, routeSettings: settings)
                     .route,
               )
