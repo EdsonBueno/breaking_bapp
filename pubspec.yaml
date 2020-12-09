@@ -23,7 +23,7 @@ dependencies:
     sdk: flutter
   http: 0.12.0+4
   rxdart: ^0.24.0
-  fluro: ^1.6.3
+  fluro: ^1.7.8
   intl_translation: ^0.17.10
   intl: ^0.16.1
 

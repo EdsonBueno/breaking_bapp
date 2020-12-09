@@ -150,7 +150,7 @@ class _MaterialBottomNavigationScaffoldState
                 initialRoute: item.initialRouteName,
                 // Detailed tutorial on this routing setup:
                 // https://edsonbueno.com/2020/02/26/spotless-routing-and-navigation-in-flutter/
-                onGenerateRoute: (settings) => Router.appRouter
+                onGenerateRoute: (settings) => FluroRouter.appRouter
                     .matchRoute(
                       context,
                       settings.name,
